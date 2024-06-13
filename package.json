@@ -9,12 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@kinde-oss/kinde-auth-nextjs": "^2.2.13",
+    "@tanstack/react-query": "^5.36.0",
     "geo-survey-map-shared-modules": "github:GeoSurveyMap/geo-survey-map-shared-modules",
     "leaflet": "^1.9.4",
+    "lucide-react": "^0.390.0",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
-    "react-leaflet": "^4.2.1"
+    "react-leaflet": "^4.2.1",
+    "react-toastify": "^10.0.5"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.12",
