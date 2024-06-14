@@ -12,6 +12,8 @@ interface MarkerInfoModal {
 	survey: Survey | null
 }
 
+type Language = 'pl' | 'en'
+
 interface AppState {
 	userLocation: Location
 	isLeftSideBarShown: boolean
@@ -19,6 +21,7 @@ interface AppState {
 	mapFilters: Category[]
 	markers: Survey[]
 	markerInfoModal: MarkerInfoModal
+	language: Language
 }
 
 interface Context {
@@ -31,6 +34,7 @@ interface Context {
 	handleMarkerInfoModalShow: () => void
 	handleMarkerInfoModalHide: () => void
 	setMarkerInfoModalData: (survey: Survey) => void
+	setLanguage: (language: Language) => void
 }
 
 const initialStateValue: AppState = {
@@ -51,7 +55,8 @@ const initialStateValue: AppState = {
 	markerInfoModal: {
 		isShown: false,
 		survey: null
-	}
+	},
+	language: 'en'
 }
 
 export const AppContext = createContext<Context | null>(null)
@@ -100,6 +105,10 @@ export const AppContextProvider: React.FC<Props> = ({ children }) => {
 		setAppState((prev) => ({ ...prev, markerInfoModal: { ...prev.markerInfoModal, survey } }))
 	}
 
+	const setLanguage = (language: Language) => {
+		setAppState((prev) => ({ ...prev, language }))
+	}
+
 	useEffect(() => {
 		if (data) {
 			setAppState((prev) => ({ ...prev, markers: data }))
@@ -117,7 +126,8 @@ export const AppContextProvider: React.FC<Props> = ({ children }) => {
 				toggleHideFilters,
 				handleMarkerInfoModalShow,
 				handleMarkerInfoModalHide,
-				setMarkerInfoModalData
+				setMarkerInfoModalData,
+				setLanguage
 			}}>
 			{children}
 		</AppContext.Provider>

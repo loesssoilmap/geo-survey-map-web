@@ -1,3 +1,5 @@
+import { useAppContext } from '@/context/AppContext'
+import { useTranslations } from '@/hooks/useTranslations'
 import { LoginLink, LogoutLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { LogIn, User } from 'lucide-react'
 import React from 'react'
@@ -15,6 +17,7 @@ export const ActionButtons = () => {
 }
 
 const AuthButton = () => {
+	const { translations } = useTranslations()
 	const { user } = useKindeBrowserClient()
 	const authButtonStyles =
 		'bg-white border-2 border-gray rounded-lg w-14 h-14 flex flex-col justify-center items-center hover:bg-zinc-100 transition-all'
@@ -24,12 +27,12 @@ const AuthButton = () => {
 			{user ? (
 				<LogoutLink className={authButtonStyles}>
 					<LogIn className="rotate-180" />
-					<p className="text-[10px] font-bold">Wyloguj</p>
+					<p className="text-[10px] font-bold">{translations.logout}</p>
 				</LogoutLink>
 			) : (
 				<LoginLink className={authButtonStyles}>
 					<LogIn />
-					<p className="text-[10px] font-bold">Zaloguj</p>
+					<p className="text-[10px] font-bold">{translations.login}</p>
 				</LoginLink>
 			)}
 		</React.Fragment>
@@ -37,18 +40,28 @@ const AuthButton = () => {
 }
 
 const ProfileButton = () => {
+	const { translations } = useTranslations()
+
 	return (
 		<button className="bg-white border-2 border-gray rounded-lg w-14 h-14 flex flex-col justify-center items-center hover:bg-zinc-100 transition-all">
 			<User />
-			<p className="text-[10px] font-bold">Profil</p>
+			<p className="text-[10px] font-bold">{translations.profile}</p>
 		</button>
 	)
 }
 
 const LanguageButton = () => {
+	const { appState, setLanguage } = useAppContext()
+
 	return (
-		<button className="bg-white border-2 border-gray rounded-lg w-14 h-14 flex flex-col justify-center items-center hover:bg-zinc-100 transition-all text-2xl">
-			🇵🇱
+		<button className="bg-white border-2 border-gray rounded-lg w-14 h-14 hover:bg-zinc-100 transition-all text-2xl">
+			<select
+				className="appearance-none h-full w-full text-center cursor-pointer"
+				value={appState.language}
+				onChange={(e) => setLanguage(e.target.value as any)}>
+				<option value="pl">🇵🇱</option>
+				<option value="en">🇬🇧</option>
+			</select>
 		</button>
 	)
 }

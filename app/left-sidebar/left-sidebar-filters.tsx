@@ -4,14 +4,16 @@ import React from 'react'
 import { Category, useGetAllSurveys } from 'geo-survey-map-shared-modules'
 import { useAppContext } from '@/context/AppContext'
 import { FILTERS } from '@/constants/constants'
+import { useTranslations } from '@/hooks/useTranslations'
 
 export const LeftSidebarFilters = () => {
+	const { translations } = useTranslations()
 	const { appState, updateFilters } = useAppContext()
 	const getActiveStyling = (category: Category) => (appState.mapFilters.includes(category) ? 'border-primary bg-primary/10' : '')
 
 	return (
 		<React.Fragment>
-			<small className="font-bold text-gray">Filtry</small>
+			<small className="font-bold text-gray">{translations.filters}</small>
 			<ul className="flex flex-col gap-2 flex-1 overflow-y-auto">
 				{FILTERS.map((item) => (
 					<li
@@ -20,7 +22,7 @@ export const LeftSidebarFilters = () => {
 							item.category
 						)}`}
 						onClick={() => updateFilters(item.category)}>
-						{item.icon} {item.title}
+						{item.icon} {translations.category[item.category]}
 					</li>
 				))}
 			</ul>

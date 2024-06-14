@@ -7,8 +7,10 @@ import { Logo } from '@/components/logo'
 import { useAppContext } from '@/context/AppContext'
 import { ChevronLeft } from 'lucide-react'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { useTranslations } from '@/hooks/useTranslations'
 
 export const LeftSidebar = () => {
+	const { translations } = useTranslations()
 	const { user } = useKindeBrowserClient()
 	const { appState, handleLeftSidebarToggle, handleRightSidebarToggle, toggleHideFilters } = useAppContext()
 	const { isLeftSideBarShown } = appState
@@ -37,15 +39,15 @@ export const LeftSidebar = () => {
 				<div className="flex justify-center">
 					<Logo />
 				</div>
-				<p>Wybierz kategorie odpowiedzi które chcesz zobaczyć na mapie</p>
+				<p>{translations.filtersDescription}</p>
 				<LeftSidebarFilters />
 				<button
-					className={`mt-auto bg-primary rounded-lg text-white mx-8 py-2 font-bold hover:opacity-95 ${!user && 'opacity-50'}`}
+					className={`mt-auto bg-primary rounded-lg text-white mx-8 py-2 font-bold ${!user && 'opacity-50'}`}
 					onClick={handleAdd}
 					disabled={!user}>
-					Dodaj
+					{translations.addPoint}
 				</button>
-				{!user && <small className="mx-8 text-center o">Musisz się zalogować, żeby móc dodać punkt</small>}
+				{!user && <small className="mx-8 text-center o">{translations.notAuthenticatedModal.message}</small>}
 			</Box>
 			<ToggleLeftSidebarButton />
 		</div>

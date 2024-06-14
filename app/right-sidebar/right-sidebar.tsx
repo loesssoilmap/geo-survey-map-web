@@ -7,8 +7,10 @@ import { useAppContext } from '@/context/AppContext'
 import { ActionButtons } from './action-buttons'
 import { RightSidebarForm } from './right-sidebar-form'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
+import { useTranslations } from '@/hooks/useTranslations'
 
 export const RightSidebar = () => {
+	const { translations } = useTranslations()
 	const { appState, handleLeftSidebarToggle, handleRightSidebarToggle, toggleHideFilters } = useAppContext()
 	const { isRightSideBarShown } = appState
 	const showSidebarStyles = isRightSideBarShown ? '-translate-x-[19rem]' : ''
@@ -26,12 +28,12 @@ export const RightSidebar = () => {
 			<ActionButtons />
 			<Box className="flex flex-col gap-4 max-w-72 p-4 h-full">
 				<div className="flex justify-between">
-					<h2 className="text-xl font-bold">Dodaj punkt</h2>
+					<h2 className="text-xl font-bold">{translations.addPoint}</h2>
 					<button onClick={handleClose}>
 						<X strokeWidth={3} />
 					</button>
 				</div>
-				<p>Wypełnij krótki kwestionariusz i dodaj punkt na mapie</p>
+				<p>{translations.addPointForm.chooseCategory.description}</p>
 				<RightSidebarForm handleClose={handleClose} />
 			</Box>
 		</div>
