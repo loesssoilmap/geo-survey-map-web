@@ -40,7 +40,7 @@ export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose 
 	}
 
 	const checkForFilledFields = () => {
-		const fields = [formState.category, formState.description, formState.solution, formState.location.name]
+		const fields = [formState.category, formState.description, formState.location.name]
 		const emptyFields = fields.filter((field) => field === '')
 
 		return emptyFields.length > 0
@@ -53,7 +53,7 @@ export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose 
 			{/* <AffectedArea /> */}
 			<AreaName />
 			<AreaDescription />
-			<AreaSolution />
+			{/* <AreaSolution /> */}
 			<button
 				className={`mt-auto bg-primary rounded-lg text-white mx-8 py-2 font-bold ${submitDisabled ? 'opacity-50' : 'hover:opacity-95'}`}
 				disabled={submitDisabled}
