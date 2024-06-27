@@ -49,10 +49,10 @@ export const MarkerInfoModal = () => {
 							<small className="font-bold text-gray">{translations.pointDetails.problemDescription}</small>
 							<p className="text-xs">{appState.markerInfoModal.survey?.description}</p>
 						</div>
-						<div>
+						{/* <div>
 							<small className="font-bold text-gray">{translations.pointDetails.problemSolution}</small>
 							<p className="text-xs">{appState.markerInfoModal.survey?.solution}</p>
-						</div>
+						</div> */}
 					</div>
 				</Box>
 			</div>
