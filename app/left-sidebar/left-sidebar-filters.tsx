@@ -14,7 +14,7 @@ export const LeftSidebarFilters = () => {
 	return (
 		<React.Fragment>
 			<small className="font-bold text-gray">{translations.filters}</small>
-			<ul className="flex flex-col gap-2 flex-1 overflow-y-auto">
+			<ul className="flex flex-col gap-2 flex-1 overflow-y-auto min-h-12">
 				{FILTERS.map((item) => (
 					<li
 						key={item.title}

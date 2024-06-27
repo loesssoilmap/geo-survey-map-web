@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 .leaflet-control-zoom {
-	margin: calc(2rem + 30px) 1rem 1rem 1rem !important;
-	transform: translateX(19rem);
+	margin: calc(2rem + 32px) 0rem 0rem -2px !important;
+	transform: translateX(13rem) !important;
 	border: 2px solid hsl(0, 0%, 86%) !important;
 	transition-property: all;
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -12,8 +12,19 @@
 }
 
 .hide-left-sidebar {
-	transform: translateX(0rem);
+	transform: translateX(1rem) !important;
 	transition-property: all;
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	transition-duration: 150ms;
+}
+
+@media (min-width: 640px) {
+	.leaflet-control-zoom {
+		transform: translateX(19rem) !important;
+		margin: calc(2rem + 30px) 1rem 1rem 1rem !important;
+	}
+
+	.hide-left-sidebar {
+		transform: translateX(0rem) !important;
+	}
 }

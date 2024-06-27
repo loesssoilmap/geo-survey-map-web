@@ -1,7 +1,7 @@
 'use client'
 
 import { Box } from '@/components/box'
-import React, { useState } from 'react'
+import React from 'react'
 import { X } from 'lucide-react'
 import { useAppContext } from '@/context/AppContext'
 import { ActionButtons } from './action-buttons'
@@ -13,7 +13,7 @@ export const RightSidebar = () => {
 	const { translations } = useTranslations()
 	const { appState, handleLeftSidebarToggle, handleRightSidebarToggle, toggleHideFilters } = useAppContext()
 	const { isRightSideBarShown } = appState
-	const showSidebarStyles = isRightSideBarShown ? '-translate-x-[19rem]' : ''
+	const showSidebarStyles = isRightSideBarShown ? '-translate-x-[13rem] sm:-translate-x-[19rem]' : ''
 	const { resetToInitial } = useMarkerFormContext()
 
 	const handleClose = () => {
@@ -24,9 +24,10 @@ export const RightSidebar = () => {
 	}
 
 	return (
-		<div className={`fixed z-800 p-4 flex h-full transition-all top-0 right-0 -me-[19rem] ${showSidebarStyles}`}>
+		<div
+			className={`fixed z-800 p-4 flex h-full transition-all top-0 right-0 -me-[14rem] sm:-me-[19rem] pointer-events-none ${showSidebarStyles}`}>
 			<ActionButtons />
-			<Box className="flex flex-col gap-4 max-w-72 p-4 h-full">
+			<Box className="flex flex-col gap-4 max-w-52 sm:max-w-72 p-4 h-full pointer-events-auto overflow-y-auto">
 				<div className="flex justify-between">
 					<h2 className="text-xl font-bold">{translations.addPoint}</h2>
 					<button onClick={handleClose}>

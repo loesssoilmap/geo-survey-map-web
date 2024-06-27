@@ -8,6 +8,8 @@ import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
 import { Bounce, toast } from 'react-toastify'
 import { useTranslations } from '@/hooks/useTranslations'
 
+const MAX_INPUT_LENGTH = 255
+
 interface RightSidebarFormProps {
 	handleClose: () => void
 }
@@ -72,7 +74,7 @@ const Categories = () => {
 			<small className="font-bold text-gray">{translations.categories}</small>
 			<ul className="flex flex-col gap-2 flex-1 overflow-y-auto">
 				{FILTERS.map((item) => (
-					<li key={item.title} className="flex justify-between gap-2">
+					<li key={item.title} className="flex justify-between gap-2 min-h-12">
 						<span
 							className={`rounded-lg border border-gray py-2 px-2 flex items-center gap-2 cursor-pointer transition text-sm w-full ${getActiveStyling(
 								item.category
@@ -126,6 +128,7 @@ const AreaName = () => {
 				type="text"
 				value={formState?.location?.name}
 				onChange={(e) => handlePickName(e.target.value)}
+				maxLength={MAX_INPUT_LENGTH}
 			/>
 		</React.Fragment>
 	)
@@ -139,9 +142,11 @@ const AreaDescription = () => {
 		<React.Fragment>
 			<small className="font-bold text-gray">{translations.addPointForm.description.problemDescription.label}</small>
 			<textarea
-				className="w-full border border-gray min-h-10 rounded-lg p-2"
+				className="w-full border border-gray min-h-10 rounded-lg p-2 resize-none"
 				value={formState.description}
-				onChange={(e) => handlePickDescription(e.target.value)}></textarea>
+				onChange={(e) => handlePickDescription(e.target.value)}
+				maxLength={MAX_INPUT_LENGTH}
+			/>
 		</React.Fragment>
 	)
 }
@@ -154,9 +159,11 @@ const AreaSolution = () => {
 		<React.Fragment>
 			<small className="font-bold text-gray">{translations.addPointForm.solution.title}</small>
 			<textarea
-				className="w-full border border-gray min-h-10 rounded-lg p-2"
+				className="w-full border border-gray min-h-10 rounded-lg p-2 resize-none"
 				value={formState.solution}
-				onChange={(e) => handlePickSolution(e.target.value)}></textarea>
+				onChange={(e) => handlePickSolution(e.target.value)}
+				maxLength={MAX_INPUT_LENGTH}
+			/>
 		</React.Fragment>
 	)
 }

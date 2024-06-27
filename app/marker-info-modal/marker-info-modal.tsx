@@ -32,7 +32,7 @@ export const MarkerInfoModal = () => {
 
 	return (
 		<div className={`absolute bottom-0 z-800 p-4 transition-all left-1/2 -translate-x-1/2 ${toggleInfoModalStyles}`} ref={modalRef}>
-			<Box className="flex flex-col h-full w-96">
+			<Box className="flex flex-col h-full w-72 sm:w-96">
 				<div
 					className={`flex justify-between ${
 						categoryToAssets[appState.markerInfoModal.survey?.category as string]?.gradient
