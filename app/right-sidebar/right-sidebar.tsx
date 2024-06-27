@@ -16,11 +16,16 @@ export const RightSidebar = () => {
 	const showSidebarStyles = isRightSideBarShown ? '-translate-x-[13rem] sm:-translate-x-[19rem]' : ''
 	const { resetToInitial } = useMarkerFormContext()
 
+	const scrollToTop = () => {
+		window.scrollTo(0, 0)
+	}
+
 	const handleClose = () => {
 		handleLeftSidebarToggle()
 		handleRightSidebarToggle()
 		toggleHideFilters()
 		resetToInitial(appState.userLocation)
+		scrollToTop()
 	}
 
 	return (
