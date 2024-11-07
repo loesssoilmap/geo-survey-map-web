@@ -50,10 +50,10 @@ export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose 
 	return (
 		<React.Fragment>
 			<Categories />
-			{/* <AffectedArea /> */}
+			<AffectedArea />
 			<AreaName />
 			<AreaDescription />
-			{/* <AreaSolution /> */}
+			<AreaSolution />
 			<button
 				className={`mt-auto bg-primary rounded-lg text-white mx-8 py-2 font-bold ${submitDisabled ? 'opacity-50' : 'hover:opacity-95'}`}
 				disabled={submitDisabled}

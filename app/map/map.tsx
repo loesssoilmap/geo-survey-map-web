@@ -5,7 +5,7 @@ import { useAppContext } from '@/context/AppContext'
 import { Icon, Marker as MarkerType, MarkerOptions, circle } from 'leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
@@ -63,16 +63,13 @@ const MapContent = () => {
 	const { handleSetUserLocation } = useAppContext()
 	const { handlePickLocation } = useMarkerFormContext()
 
-	useEffect(
-		() => {
-			map.locate().on('locationfound', (e) => {
-				map.setView(e.latlng, map.getZoom())
-				handleSetUserLocation({ x: e.latlng.lat, y: e.latlng.lng })
-				handlePickLocation({ x: e.latlng.lat, y: e.latlng.lng })
-			})
-		},
-		[] // eslint-disable-line react-hooks/exhaustive-deps
-	)
+	useEffect(() => {
+		map.locate().on('locationfound', (e) => {
+			map.setView(e.latlng, map.getZoom())
+			handleSetUserLocation({ x: e.latlng.lat, y: e.latlng.lng })
+			handlePickLocation({ x: e.latlng.lat, y: e.latlng.lng })
+		})
+	}, [handlePickLocation, handleSetUserLocation, map])
 
 	return (
 		<TileLayer
@@ -85,8 +82,8 @@ const MapContent = () => {
 const TemporaryMarker = () => {
 	const map = useMap()
 	const { formState, handlePickLocation } = useMarkerFormContext()
-	// const [affectedAreaCrircle, setAffectedAreaCrircle] = useState<L.Circle<any> | null>(null)
 	const markerRef = useRef<MarkerType | null>(null)
+	const affectedAreaCircleRef = useRef<L.Circle<any> | null>(null)
 	const eventHandlers = useMemo(
 		() => ({
 			dragend() {
@@ -99,15 +96,22 @@ const TemporaryMarker = () => {
 		[handlePickLocation]
 	)
 
-	// useEffect(() => {
-	// 	if (affectedAreaCrircle) {
-	// 		map.removeLayer(affectedAreaCrircle)
-	// 	}
-	// 	const circle = L.circle({ lat: formState.location.x, lng: formState.location.y }, { radius: formState.affectedArea / 10 })
-	// 	circle.addTo(map)
+	useEffect(() => {
+		if (affectedAreaCircleRef.current) {
+			map.removeLayer(affectedAreaCircleRef.current)
+		}
 
-	// 	setAffectedAreaCrircle(circle)
-	// }, [formState.affectedArea, formState.location.x, formState.location.y]) // eslint-disable-line react-hooks/exhaustive-deps
+		const newCircle = L.circle({ lat: formState.location.x, lng: formState.location.y }, { radius: formState.affectedArea / 10 })
+		newCircle.addTo(map)
+
+		affectedAreaCircleRef.current = newCircle
+
+		return () => {
+			if (affectedAreaCircleRef.current) {
+				map.removeLayer(affectedAreaCircleRef.current)
+			}
+		}
+	}, [formState.affectedArea, formState.location, map])
 
 	const customMarker = new Icon({
 		iconUrl: formState.category ? categoryToAssets[formState.category].iconUrl : '/person_standing.png',
