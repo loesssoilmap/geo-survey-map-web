@@ -2,6 +2,7 @@
 
 import { createContext, useState, useContext, useEffect } from 'react'
 import { Category, Location, Survey, useGetAllSurveys } from 'geo-survey-map-shared-modules'
+import { DEFAULT_LOCATION } from '@/constants/constants'
 
 interface Props {
 	children?: React.ReactNode
@@ -22,6 +23,7 @@ interface AppState {
 	markers: Survey[]
 	markerInfoModal: MarkerInfoModal
 	language: Language
+	shouldCenterOnUser: boolean
 }
 
 interface Context {
@@ -35,10 +37,11 @@ interface Context {
 	handleMarkerInfoModalHide: () => void
 	setMarkerInfoModalData: (survey: Survey) => void
 	setLanguage: (language: Language) => void
+	handleCenterOnUser: (center: boolean) => void
 }
 
 const initialStateValue: AppState = {
-	userLocation: {} as Location,
+	userLocation: DEFAULT_LOCATION,
 	isLeftSideBarShown: true,
 	isRightSideBarShown: false,
 	markers: [],
@@ -56,7 +59,8 @@ const initialStateValue: AppState = {
 		isShown: false,
 		survey: null
 	},
-	language: 'en'
+	language: 'en',
+	shouldCenterOnUser: true
 }
 
 export const AppContext = createContext<Context | null>(null)
@@ -109,6 +113,10 @@ export const AppContextProvider: React.FC<Props> = ({ children }) => {
 		setAppState((prev) => ({ ...prev, language }))
 	}
 
+	const handleCenterOnUser = (center: boolean) => {
+		setAppState((prev) => ({ ...prev, shouldCenterOnUser: center }))
+	}
+
 	useEffect(() => {
 		if (data) {
 			setAppState((prev) => ({ ...prev, markers: data }))
@@ -127,7 +135,8 @@ export const AppContextProvider: React.FC<Props> = ({ children }) => {
 				handleMarkerInfoModalShow,
 				handleMarkerInfoModalHide,
 				setMarkerInfoModalData,
-				setLanguage
+				setLanguage,
+				handleCenterOnUser
 			}}>
 			{children}
 		</AppContext.Provider>

@@ -2,6 +2,7 @@ import { useAppContext } from '@/context/AppContext'
 import { useTranslations } from '@/hooks/useTranslations'
 import { LoginLink, LogoutLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { LogIn, User } from 'lucide-react'
+import Link from 'next/link'
 import React from 'react'
 
 export const ActionButtons = () => {
@@ -16,11 +17,12 @@ export const ActionButtons = () => {
 	)
 }
 
+const authButtonStyles =
+	'bg-white border-2 border-gray rounded-lg w-14 h-14 flex flex-col justify-center items-center hover:bg-zinc-100 transition-all pointer-events-auto'
+
 const AuthButton = () => {
 	const { translations } = useTranslations()
 	const { user } = useKindeBrowserClient()
-	const authButtonStyles =
-		'bg-white border-2 border-gray rounded-lg w-14 h-14 flex flex-col justify-center items-center hover:bg-zinc-100 transition-all pointer-events-auto'
 
 	return (
 		<React.Fragment>
@@ -43,10 +45,12 @@ const ProfileButton = () => {
 	const { translations } = useTranslations()
 
 	return (
-		<button className="bg-white border-2 border-gray rounded-lg w-14 h-14 flex flex-col justify-center items-center hover:bg-zinc-100 transition-all pointer-events-auto">
-			<User />
-			<p className="text-[10px] font-bold">{translations.profile}</p>
-		</button>
+		<Link href={'/profile'}>
+			<button className={authButtonStyles}>
+				<User />
+				<p className="text-[10px] font-bold">{translations.profile}</p>
+			</button>
+		</Link>
 	)
 }
 
@@ -54,13 +58,17 @@ const LanguageButton = () => {
 	const { appState, setLanguage } = useAppContext()
 
 	return (
-		<button className="bg-white border-2 border-gray rounded-lg w-14 h-14 hover:bg-zinc-100 transition-all text-2xl pointer-events-auto">
+		<button className={authButtonStyles}>
 			<select
-				className="appearance-none h-full w-full text-center cursor-pointer"
+				className="appearance-none h-full w-13 text-center cursor-pointer font-bold text-xs bg-transparent"
 				value={appState.language}
 				onChange={(e) => setLanguage(e.target.value as any)}>
-				<option value="pl">🇵🇱</option>
-				<option value="en">🇬🇧</option>
+				<option className="" value="pl">
+					PL
+				</option>
+				<option className="text-[6px]" value="en">
+					ENG
+				</option>
 			</select>
 		</button>
 	)

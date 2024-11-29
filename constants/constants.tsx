@@ -43,3 +43,8 @@ export const FILTERS = [
 		icon: categoryToAssets[Category.PH].icon
 	}
 ]
+
+export const DEFAULT_LOCATION = {
+	x: 50.1109,
+	y: 10.7458
+}

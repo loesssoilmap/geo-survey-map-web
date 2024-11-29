@@ -9,6 +9,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
+import { toast } from 'react-toastify'
+import { DEFAULT_LOCATION } from '@/constants/constants'
 
 const Map = () => {
 	const { appState, handleMarkerInfoModalShow, setMarkerInfoModalData } = useAppContext()
@@ -20,7 +22,7 @@ const Map = () => {
 
 	return (
 		<MapContainer
-			center={{ lat: 52.406374, lng: 16.9251681 }}
+			center={{ lat: DEFAULT_LOCATION.x, lng: DEFAULT_LOCATION.y }}
 			zoom={15}
 			scrollWheelZoom={true}
 			className="min-h-screen min-w-max"
@@ -61,15 +63,25 @@ const Map = () => {
 const MapContent = () => {
 	const map = useMap()
 	const { handleSetUserLocation } = useAppContext()
-	const { handlePickLocation } = useMarkerFormContext()
 
 	useEffect(() => {
-		map.locate().on('locationfound', (e) => {
-			map.setView(e.latlng, map.getZoom())
+		const handleLocationFound = (e: any) => {
+			map.setView({ lat: e.latlng.lat, lng: e.latlng.lng })
 			handleSetUserLocation({ x: e.latlng.lat, y: e.latlng.lng })
-			handlePickLocation({ x: e.latlng.lat, y: e.latlng.lng })
-		})
-	}, [handlePickLocation, handleSetUserLocation, map])
+		}
+
+		const handleLocationError = () => {
+			toast('Nie udało się namierzyć twojej lokalizacji, spróbuj odświeżyć stronę.', { type: 'error' })
+		}
+
+		map.locate({ enableHighAccuracy: true }).on('locationfound', handleLocationFound).on('locationerror', handleLocationError)
+
+		return () => {
+			map.off('locationfound', handleLocationFound)
+			map.off('locationerror', handleLocationError)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	return (
 		<TileLayer

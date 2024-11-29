@@ -12,7 +12,7 @@ import { useTranslations } from '@/hooks/useTranslations'
 export const LeftSidebar = () => {
 	const { translations } = useTranslations()
 	const { user } = useKindeBrowserClient()
-	const { appState, handleLeftSidebarToggle, handleRightSidebarToggle, toggleHideFilters } = useAppContext()
+	const { appState, handleLeftSidebarToggle, handleRightSidebarToggle, toggleHideFilters, handleCenterOnUser } = useAppContext()
 	const { isLeftSideBarShown } = appState
 	const hideSidebarStyles = isLeftSideBarShown ? '' : '-translate-x-[13rem] sm:-translate-x-[19rem]'
 
@@ -31,6 +31,7 @@ export const LeftSidebar = () => {
 		handleLeftSidebarToggle()
 		handleRightSidebarToggle()
 		toggleHideFilters()
+		handleCenterOnUser(true)
 	}
 
 	return (
@@ -42,7 +43,7 @@ export const LeftSidebar = () => {
 				<p>{translations.filtersDescription}</p>
 				<LeftSidebarFilters />
 				<button
-					className={`mt-auto bg-primary rounded-lg text-white mx-8 py-2 font-bold ${!user && 'opacity-50'}`}
+					className={`mt-auto bg-emerald-400 hover:bg-emerald-500 rounded-lg text-white mx-8 py-2 font-bold ${!user && 'opacity-50'}`}
 					onClick={handleAdd}
 					disabled={!user}>
 					{translations.addPoint}

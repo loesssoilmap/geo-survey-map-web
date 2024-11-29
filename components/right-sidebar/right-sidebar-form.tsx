@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Category, updateApiClient, useCreateSurvey, fallbacks } from 'geo-survey-map-shared-modules'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { useAppContext } from '@/context/AppContext'
@@ -16,7 +16,8 @@ interface RightSidebarFormProps {
 
 export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose }) => {
 	const { translations } = useTranslations()
-	const { formState } = useMarkerFormContext()
+	const { formState, handlePickLocation } = useMarkerFormContext()
+	const { appState } = useAppContext()
 	const { mutateAsync } = useCreateSurvey()
 	const { accessTokenRaw } = useKindeBrowserClient()
 
@@ -46,6 +47,10 @@ export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose 
 		return emptyFields.length > 0
 	}
 	const submitDisabled = checkForFilledFields()
+
+	useEffect(() => {
+		handlePickLocation(appState.userLocation)
+	}, [appState.userLocation, handlePickLocation])
 
 	return (
 		<React.Fragment>

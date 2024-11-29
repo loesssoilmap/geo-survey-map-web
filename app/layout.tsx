@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`overflow-hidden ${montserrat.className}`}>
+			<body className={montserrat.className}>
 				<TQueryProvider>
 					<AppContextProvider>
 						<MarkerFormContextProvider>{children}</MarkerFormContextProvider>
