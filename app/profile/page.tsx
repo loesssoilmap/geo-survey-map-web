@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useTranslations } from '@/hooks/useTranslations'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { ArrowLeft, MapPin, Trash2, User } from 'lucide-react'
 // import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Component() {
+	const { translations } = useTranslations()
 	const { user } = useKindeBrowserClient()
 
 	return (
@@ -31,9 +33,9 @@ export default function Component() {
 
 				<Tabs defaultValue="profile" className="space-y-6">
 					<TabsList className="grid w-full grid-cols-3">
-						<TabsTrigger value="profile">Twój profil</TabsTrigger>
-						<TabsTrigger value="users">Użytkownicy</TabsTrigger>
-						<TabsTrigger value="points">Punkty</TabsTrigger>
+						<TabsTrigger value="profile">{translations.userProfile.title}</TabsTrigger>
+						<TabsTrigger value="users">{translations.userManagement.title}</TabsTrigger>
+						<TabsTrigger value="points">{translations.pointManagement.title}</TabsTrigger>
 					</TabsList>
 
 					<TabsContent value="profile" className="space-y-6">

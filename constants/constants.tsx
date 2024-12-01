@@ -46,5 +46,7 @@ export const FILTERS = [
 
 export const DEFAULT_LOCATION = {
 	x: 50.1109,
-	y: 10.7458
+	y: 8.6821
 }
+export const DEFAULT_ZOOM = 5
+export const DEFAULT_MIN_ZOOM = 3

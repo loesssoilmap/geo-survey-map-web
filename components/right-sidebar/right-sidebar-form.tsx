@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Category, updateApiClient, useCreateSurvey, fallbacks } from 'geo-survey-map-shared-modules'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { useAppContext } from '@/context/AppContext'
 import { FILTERS } from '@/constants/constants'
 import { CircleHelp } from 'lucide-react'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import { useTranslations } from '@/hooks/useTranslations'
 
 const MAX_INPUT_LENGTH = 255
@@ -47,10 +47,6 @@ export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose 
 		return emptyFields.length > 0
 	}
 	const submitDisabled = checkForFilledFields()
-
-	useEffect(() => {
-		handlePickLocation(appState.userLocation)
-	}, [appState.userLocation, handlePickLocation])
 
 	return (
 		<React.Fragment>
