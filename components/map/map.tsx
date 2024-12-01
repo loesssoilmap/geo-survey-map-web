@@ -99,6 +99,13 @@ const TemporaryMarker = () => {
 	const { formState, handlePickLocation } = useMarkerFormContext()
 	const markerRef = useRef<MarkerType | null>(null)
 	const affectedAreaCircleRef = useRef<L.Circle<any> | null>(null)
+	useEffect(() => {
+		if (formState.location.x === DEFAULT_LOCATION.x && formState.location.y === DEFAULT_LOCATION.y) {
+			const mapCenter = map.getCenter()
+			handlePickLocation({ x: mapCenter.lat, y: mapCenter.lng })
+		}
+	}, [map, formState.location, handlePickLocation])
+
 	const eventHandlers = useMemo(
 		() => ({
 			dragend() {
