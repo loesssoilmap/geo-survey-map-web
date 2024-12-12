@@ -1,15 +1,16 @@
 import { useAppContext } from '@/context/AppContext'
 import { useTranslations } from '@/hooks/useTranslations'
 import { LoginLink, LogoutLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
-import { LogIn, User } from 'lucide-react'
+import { Home, LogIn, User } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-export const ActionButtons = () => {
+export const RightSidebarActionButtons = () => {
 	const { user } = useKindeBrowserClient()
 
 	return (
 		<div className="flex flex-col gap-4 me-4">
+			<HomeButton />
 			<AuthButton />
 			{user && <ProfileButton />}
 			<LanguageButton />
@@ -19,6 +20,14 @@ export const ActionButtons = () => {
 
 const authButtonStyles =
 	'bg-white border-2 border-gray rounded-lg w-14 h-14 flex flex-col justify-center items-center hover:bg-zinc-100 transition-all pointer-events-auto'
+
+const HomeButton = () => (
+	<Link href="/">
+		<button className={authButtonStyles}>
+			<Home />
+		</button>
+	</Link>
+)
 
 const AuthButton = () => {
 	const { translations } = useTranslations()
@@ -45,7 +54,7 @@ const ProfileButton = () => {
 	const { translations } = useTranslations()
 
 	return (
-		<Link href={'/profile'}>
+		<Link href="/profile">
 			<button className={authButtonStyles}>
 				<User />
 				<p className="text-[10px] font-bold">{translations.profile}</p>

@@ -5,6 +5,9 @@ import { AppContextProvider } from '@/context/AppContext'
 import { TQueryProvider } from '@/provider/TQueryProvider'
 const montserrat = Montserrat({ subsets: ['latin'] })
 import { MarkerFormContextProvider } from '@/context/AddMarkerFormContext'
+import { LayoutWrapper } from './layout-wrapper'
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+const { isAuthenticated, getAccessTokenRaw } = getKindeServerSession()
 
 export const metadata: Metadata = {
 	title: 'GeoSurveyMap',
@@ -12,17 +15,22 @@ export const metadata: Metadata = {
 		'The purpose of this platform is to gather your experiences and opinions on observable climate changes in your local environment. Share your insights on how climate shifts are affecting your community and contribute to a growing database of firsthand accounts. Together, we can build a comprehensive picture of the impact of climate change around the world.'
 }
 
-export default function RootLayout({
+export default async function RootLayout({
 	children
 }: Readonly<{
 	children: React.ReactNode
 }>) {
+	const isUserAuthenticated = await isAuthenticated()
+	const accessTokenRaw = await getAccessTokenRaw()
+
 	return (
 		<html lang="en">
-			<body className={`${montserrat.className} overflow-y-hidden`}>
-				<TQueryProvider>
+			<body className={montserrat.className}>
+				<TQueryProvider isUserAuthenticated={isUserAuthenticated} accessTokenRaw={accessTokenRaw}>
 					<AppContextProvider>
-						<MarkerFormContextProvider>{children}</MarkerFormContextProvider>
+						<MarkerFormContextProvider>
+							<LayoutWrapper>{children}</LayoutWrapper>
+						</MarkerFormContextProvider>
 					</AppContextProvider>
 				</TQueryProvider>
 			</body>

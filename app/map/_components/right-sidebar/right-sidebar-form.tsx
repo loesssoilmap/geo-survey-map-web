@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react'
-import { Category, updateApiClient, useCreateSurvey, useFileUpload } from 'geo-survey-map-shared-modules'
+import { Category, useCreateSurvey, useFileUpload } from 'geo-survey-map-shared-modules'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { useAppContext } from '@/context/AppContext'
 import { FILTERS } from '@/constants/constants'
@@ -7,12 +7,12 @@ import { Camera, CircleHelp } from 'lucide-react'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
 import { toast } from 'react-toastify'
 import { useTranslations } from '@/hooks/useTranslations'
-import { Slider } from '../ui/slider'
+import { Slider } from '@/components/ui/slider'
 import { linearToLog, logToLinear } from '@/lib/utils'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import { Textarea } from '../ui/textarea'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 const MAX_INPUT_LENGTH = 255
 
@@ -29,10 +29,8 @@ export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose,
 	const { formState } = useMarkerFormContext()
 	const { handleUpdateMarkersDisplay } = useAppContext()
 	const { mutateAsync: createSurvey } = useCreateSurvey()
-	const { accessTokenRaw } = useKindeBrowserClient()
 
 	const handleAddMarker = async () => {
-		updateApiClient.setAuthenticationHeader(accessTokenRaw as string)
 		const response = await createSurvey({
 			category: formState.category,
 			description: formState.description,
@@ -41,7 +39,6 @@ export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose,
 			affectedArea: formState.affectedArea,
 			filePath: formState.filePath
 		})
-		updateApiClient.removeAuthenticationHeader()
 		if (response.status === 200 && response.data.data) {
 			handleUpdateMarkersDisplay(response.data.data)
 			toast.success(translations.addPointForm.successMessage)
@@ -173,11 +170,9 @@ const AreaPhoto: React.FC<AreaPhoto> = ({ fileName, setFileName }) => {
 				const formData = new FormData()
 				formData.append('file', photoAsset, photoAsset.name)
 				try {
-					updateApiClient.setAuthenticationHeader(accessTokenRaw as string)
 					const {
 						data: { data }
 					} = await uploadFileAsync(formData)
-					updateApiClient.removeAuthenticationHeader()
 					filePath = data
 
 					setFileName(photoAsset.name)

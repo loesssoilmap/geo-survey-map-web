@@ -7,7 +7,7 @@ import { FILTERS } from '@/constants/constants'
 import { useTranslations } from '@/hooks/useTranslations'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { cn } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 export const LeftSidebarFilters = () => {
 	const { translations } = useTranslations()

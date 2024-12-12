@@ -9,6 +9,8 @@ const client = jwksClient({
 })
 
 export async function POST(req: Request) {
+	updateApiClient.setBaseURL('http://localhost:8080')
+
 	try {
 		const token = await req.text()
 		const jwtDecoded = jwt.decode(token, { complete: true })
@@ -31,7 +33,6 @@ export async function POST(req: Request) {
 			case 'user.created':
 				const user = event.data.user
 
-				updateApiClient.setBaseURL('http://localhost:8080')
 				await postRegisterUser({
 					email: user?.email!,
 					kindeId: user?.id!,

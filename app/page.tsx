@@ -1,20 +1,10 @@
 import dynamic from 'next/dynamic'
-import { LeftSidebar } from '@/components/left-sidebar/left-sidebar'
-import { RightSidebar } from '@/components/right-sidebar/right-sidebar'
-import { ToastProvider } from '@/components/toast'
-import { MarkerInfoModal } from '@/components/marker-info-modal'
-import { CategoryInfoModal } from '@/components/category-info-modal'
-const DynamicMapComponent = dynamic(() => import('@/components/map/map'), { ssr: false })
+import Link from 'next/link'
 
 export default function Home() {
 	return (
 		<main>
-			<ToastProvider />
-			<RightSidebar />
-			<LeftSidebar />
-			<MarkerInfoModal />
-			<CategoryInfoModal />
-			<DynamicMapComponent />
+			<Link href="/map">Go to the map</Link>
 		</main>
 	)
 }

@@ -4,7 +4,7 @@ import { Box } from '@/components/box'
 import React, { useState } from 'react'
 import { X } from 'lucide-react'
 import { useAppContext } from '@/context/AppContext'
-import { ActionButtons } from './action-buttons'
+import { RightSidebarActionButtons } from './right-sidebar-action-buttons'
 import { RightSidebarForm } from './right-sidebar-form'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
 import { useTranslations } from '@/hooks/useTranslations'
@@ -35,7 +35,7 @@ export const RightSidebar = () => {
 	return (
 		<div
 			className={`fixed z-800 p-4 flex h-full transition-all top-0 right-0 -me-[14rem] sm:-me-[19rem] pointer-events-none ${showSidebarStyles}`}>
-			<ActionButtons />
+			<RightSidebarActionButtons />
 			<Box className="flex flex-col gap-4 max-w-52 sm:max-w-72 p-4 h-full pointer-events-auto overflow-y-auto">
 				<div className="flex justify-between">
 					<h2 className="text-xl font-bold">{translations.addPoint}</h2>
