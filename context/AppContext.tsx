@@ -13,6 +13,15 @@ interface MarkerInfoModal {
 	survey: Survey | null
 }
 
+interface CategoryInfoModal {
+	isShown: boolean
+	category: Category | null
+	categoryInfo: string
+	categoryImageUrl: string
+}
+
+type CategoryInfoModalData = Omit<CategoryInfoModal, 'isShown'>
+
 type Language = 'pl' | 'en'
 
 interface AppState {
@@ -24,6 +33,7 @@ interface AppState {
 	markerInfoModal: MarkerInfoModal
 	language: Language
 	shouldCenterOnUser: boolean
+	categoryInfoModal: CategoryInfoModal
 }
 
 interface Context {
@@ -38,6 +48,10 @@ interface Context {
 	setMarkerInfoModalData: (survey: Survey) => void
 	setLanguage: (language: Language) => void
 	handleCenterOnUser: (center: boolean) => void
+	handleUpdateMarkersDisplay: (survey: Survey) => void
+	handleCategoryInfoModalShow: () => void
+	handleCategoryInfoModalHide: () => void
+	setCategoryInfoModalData: ({ category, categoryInfo, categoryImageUrl }: CategoryInfoModalData) => void
 }
 
 const initialStateValue: AppState = {
@@ -58,6 +72,12 @@ const initialStateValue: AppState = {
 	markerInfoModal: {
 		isShown: false,
 		survey: null
+	},
+	categoryInfoModal: {
+		isShown: false,
+		category: null,
+		categoryInfo: '',
+		categoryImageUrl: '/las.jpg'
 	},
 	language: 'en',
 	shouldCenterOnUser: true
@@ -117,6 +137,22 @@ export const AppContextProvider: React.FC<Props> = ({ children }) => {
 		setAppState((prev) => ({ ...prev, shouldCenterOnUser: center }))
 	}
 
+	const handleUpdateMarkersDisplay = (survey: Survey) => {
+		setAppState((prev) => ({ ...prev, markers: [...prev.markers, survey] }))
+	}
+
+	const handleCategoryInfoModalShow = () => {
+		setAppState((prev) => ({ ...prev, categoryInfoModal: { ...prev.categoryInfoModal, isShown: true } }))
+	}
+
+	const handleCategoryInfoModalHide = () => {
+		setAppState((prev) => ({ ...prev, categoryInfoModal: { ...prev.categoryInfoModal, isShown: false } }))
+	}
+
+	const setCategoryInfoModalData = ({ category, categoryInfo, categoryImageUrl }: CategoryInfoModalData) => {
+		setAppState((prev) => ({ ...prev, categoryInfoModal: { ...prev.categoryInfoModal, category, categoryInfo, categoryImageUrl } }))
+	}
+
 	useEffect(() => {
 		if (data) {
 			setAppState((prev) => ({ ...prev, markers: data }))
@@ -136,7 +172,11 @@ export const AppContextProvider: React.FC<Props> = ({ children }) => {
 				handleMarkerInfoModalHide,
 				setMarkerInfoModalData,
 				setLanguage,
-				handleCenterOnUser
+				handleCenterOnUser,
+				handleUpdateMarkersDisplay,
+				handleCategoryInfoModalShow,
+				handleCategoryInfoModalHide,
+				setCategoryInfoModalData
 			}}>
 			{children}
 		</AppContext.Provider>

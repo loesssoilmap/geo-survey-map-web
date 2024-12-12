@@ -4,7 +4,6 @@ import './globals.css'
 import { AppContextProvider } from '@/context/AppContext'
 import { TQueryProvider } from '@/provider/TQueryProvider'
 const montserrat = Montserrat({ subsets: ['latin'] })
-import { updateApiClient } from 'geo-survey-map-shared-modules'
 import { MarkerFormContextProvider } from '@/context/AddMarkerFormContext'
 
 export const metadata: Metadata = {
@@ -20,7 +19,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={montserrat.className}>
+			<body className={`${montserrat.className} overflow-y-hidden`}>
 				<TQueryProvider>
 					<AppContextProvider>
 						<MarkerFormContextProvider>{children}</MarkerFormContextProvider>

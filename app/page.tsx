@@ -3,6 +3,7 @@ import { LeftSidebar } from '@/components/left-sidebar/left-sidebar'
 import { RightSidebar } from '@/components/right-sidebar/right-sidebar'
 import { ToastProvider } from '@/components/toast'
 import { MarkerInfoModal } from '@/components/marker-info-modal'
+import { CategoryInfoModal } from '@/components/category-info-modal'
 const DynamicMapComponent = dynamic(() => import('@/components/map/map'), { ssr: false })
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
 			<RightSidebar />
 			<LeftSidebar />
 			<MarkerInfoModal />
+			<CategoryInfoModal />
 			<DynamicMapComponent />
 		</main>
 	)

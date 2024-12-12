@@ -27,7 +27,7 @@ export default function Component() {
 						<div className="mx-auto">
 							<Logo />
 						</div>
-						<div className="w-10" /> {/* Spacer for centering */}
+						<div className="w-10" />
 					</div>
 				</header>
 
@@ -60,7 +60,7 @@ export default function Component() {
 											<label className="text-sm text-gray-600">Email</label>
 											<Input type="email" placeholder={user?.email || 'user@gmail.com'} />
 										</div>
-										<Button className="w-full bg-emerald-400 hover:bg-emerald-500">Zmień adres email</Button>
+										<Button className="w-full">Zmień adres email</Button>
 									</div>
 
 									<div className="space-y-4">

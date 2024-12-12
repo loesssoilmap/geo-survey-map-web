@@ -3,11 +3,7 @@
 import { createContext, useState, useContext } from 'react'
 import { Category, Survey, Location } from 'geo-survey-map-shared-modules'
 
-interface ExtendedSurvey extends Survey {
-	affectedArea: number
-}
-
-export const initialFormStateValue: ExtendedSurvey = {
+export const initialFormStateValue: Survey = {
 	category: '' as Category,
 	description: '',
 	solution: '',
@@ -16,17 +12,21 @@ export const initialFormStateValue: ExtendedSurvey = {
 		y: 0,
 		name: ''
 	},
-	affectedArea: 0
+	affectedArea: 0,
+	user: {},
+	filePath: '',
+	createdAt: ''
 }
 
 interface Context {
-	formState: ExtendedSurvey
+	formState: Survey
 	handlePickCategory: (category: Category) => void
 	handlePickDescription: (description: string) => void
 	handlePickSolution: (solution: string) => void
 	handlePickLocation: (location: Location) => void
 	handleAffectedArea: (affectedArea: number) => void
 	handlePickName: (name: string) => void
+	handleFilePath: (photoFilePath: string) => void
 	resetToInitial: (location: Location) => void
 }
 
@@ -70,6 +70,10 @@ export const MarkerFormContextProvider: React.FC<{ children?: React.ReactNode }>
 		setFormState((prev) => ({ ...prev, affectedArea }))
 	}
 
+	const handleFilePath = (photoFilePath: string) => {
+		setFormState((prev) => ({ ...prev, filePath: photoFilePath }))
+	}
+
 	return (
 		<MarkerFormContext.Provider
 			value={{
@@ -80,7 +84,8 @@ export const MarkerFormContextProvider: React.FC<{ children?: React.ReactNode }>
 				handlePickLocation,
 				handleAffectedArea,
 				handlePickName,
-				resetToInitial
+				resetToInitial,
+				handleFilePath
 			}}>
 			{children}
 		</MarkerFormContext.Provider>

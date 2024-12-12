@@ -1,7 +1,7 @@
 'use client'
 
 import { Box } from '@/components/box'
-import React from 'react'
+import React, { useState } from 'react'
 import { X } from 'lucide-react'
 import { useAppContext } from '@/context/AppContext'
 import { ActionButtons } from './action-buttons'
@@ -15,6 +15,8 @@ export const RightSidebar = () => {
 	const { isRightSideBarShown } = appState
 	const showSidebarStyles = isRightSideBarShown ? '-translate-x-[13rem] sm:-translate-x-[19rem]' : ''
 	const { resetToInitial } = useMarkerFormContext()
+	const [fileName, setFileName] = useState<string | null>(null)
+	const [selectSolution, setSelectSolution] = useState<string>('')
 
 	const scrollToTop = () => {
 		window.scrollTo(0, 0)
@@ -25,6 +27,8 @@ export const RightSidebar = () => {
 		handleRightSidebarToggle()
 		toggleHideFilters()
 		resetToInitial(appState.userLocation)
+		setFileName(null)
+		setSelectSolution('')
 		scrollToTop()
 	}
 
@@ -40,7 +44,13 @@ export const RightSidebar = () => {
 					</button>
 				</div>
 				<p>{translations.addPointForm.chooseCategory.description}</p>
-				<RightSidebarForm handleClose={handleClose} />
+				<RightSidebarForm
+					handleClose={handleClose}
+					fileName={fileName}
+					setFileName={setFileName}
+					selectSolution={selectSolution}
+					setSelectSolution={setSelectSolution}
+				/>
 			</Box>
 		</div>
 	)

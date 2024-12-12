@@ -8,6 +8,7 @@ import { useAppContext } from '@/context/AppContext'
 import { ChevronLeft } from 'lucide-react'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { useTranslations } from '@/hooks/useTranslations'
+import { toast } from 'react-toastify'
 
 export const LeftSidebar = () => {
 	const { translations } = useTranslations()
@@ -32,6 +33,7 @@ export const LeftSidebar = () => {
 		handleRightSidebarToggle()
 		toggleHideFilters()
 		handleCenterOnUser(true)
+		toast('Drag the temporary marker to the desired location', { type: 'info' })
 	}
 
 	return (
@@ -43,7 +45,7 @@ export const LeftSidebar = () => {
 				<p>{translations.filtersDescription}</p>
 				<LeftSidebarFilters />
 				<button
-					className={`mt-auto bg-emerald-400 hover:bg-emerald-500 rounded-lg text-white mx-8 py-2 font-bold ${!user && 'opacity-50'}`}
+					className={`mt-auto bg-primary hover:bg-primary/90 rounded-lg text-white mx-8 py-2 font-bold ${!user && 'opacity-50'}`}
 					onClick={handleAdd}
 					disabled={!user}>
 					{translations.addPoint}

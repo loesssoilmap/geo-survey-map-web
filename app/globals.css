@@ -10,21 +10,21 @@
 		--card-foreground: 240 10% 3.9%;
 		--popover: 0 0% 100%;
 		--popover-foreground: 240 10% 3.9%;
-		--primary: 142.1 76.2% 36.3%;
-		--primary-foreground: 355.7 100% 97.3%;
+		--primary: 164 71% 51%; /* Adjusted for #14D49B */
+		--primary-foreground: 164 100% 97%; /* High contrast to primary */
 		--secondary: 240 4.8% 95.9%;
 		--secondary-foreground: 240 5.9% 10%;
 		--muted: 240 4.8% 95.9%;
 		--muted-foreground: 240 3.8% 46.1%;
-		--accent: 240 4.8% 95.9%;
-		--accent-foreground: 240 5.9% 10%;
+		--accent: 164 71% 51%; /* Match primary for coherence */
+		--accent-foreground: 164 100% 97%;
 		--destructive: 0 84.2% 60.2%;
 		--destructive-foreground: 0 0% 98%;
 		--border: 240 5.9% 90%;
 		--input: 240 5.9% 90%;
-		--ring: 142.1 76.2% 36.3%;
+		--ring: 164 71% 51%; /* Harmonized with primary */
 		--radius: 0.5rem;
-		--chart-1: 12 76% 61%;
+		--chart-1: 164 71% 51%; /* Match primary for vibrant visuals */
 		--chart-2: 173 58% 39%;
 		--chart-3: 197 37% 24%;
 		--chart-4: 43 74% 66%;
@@ -38,20 +38,20 @@
 		--card-foreground: 0 0% 95%;
 		--popover: 0 0% 9%;
 		--popover-foreground: 0 0% 95%;
-		--primary: 142.1 70.6% 45.3%;
-		--primary-foreground: 144.9 80.4% 10%;
+		--primary: 164 71% 41%; /* Adjusted for darker mode */
+		--primary-foreground: 164 100% 97%; /* High contrast to primary */
 		--secondary: 240 3.7% 15.9%;
 		--secondary-foreground: 0 0% 98%;
 		--muted: 0 0% 15%;
 		--muted-foreground: 240 5% 64.9%;
-		--accent: 12 6.5% 15.1%;
-		--accent-foreground: 0 0% 98%;
+		--accent: 164 71% 41%; /* Match primary */
+		--accent-foreground: 164 100% 97%;
 		--destructive: 0 62.8% 30.6%;
 		--destructive-foreground: 0 85.7% 97.3%;
 		--border: 240 3.7% 15.9%;
 		--input: 240 3.7% 15.9%;
-		--ring: 142.4 71.8% 29.2%;
-		--chart-1: 220 70% 50%;
+		--ring: 164 71% 41%; /* Harmonized with primary */
+		--chart-1: 164 71% 41%; /* Match primary for vibrant visuals */
 		--chart-2: 160 60% 45%;
 		--chart-3: 30 80% 55%;
 		--chart-4: 280 65% 60%;
@@ -93,4 +93,16 @@
 	.hide-left-sidebar {
 		transform: translateX(0rem) !important;
 	}
+}
+
+.marker-cluster-custom {
+	background-image: linear-gradient(145deg, #14d49b, #0fba87);
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+	color: #fff;
+	font-weight: bold;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
