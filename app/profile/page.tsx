@@ -14,11 +14,10 @@ import { PointsTab } from './_components/points-tab'
 export default function Component() {
 	const { translations } = useTranslations()
 	const { user } = useKindeBrowserClient()
-	const { data, isFetching } = useGetUsersSurveys()
 
 	return (
 		<div className="min-h-screen bg-gray-50">
-			<div className="mx-auto max-w-xl px-4">
+			<div className="mx-auto max-w-screen-md px-4">
 				<header className="py-6">
 					<div className="flex items-center">
 						<Link href="/map" className="rounded-lg p-2 hover:bg-gray-100">
@@ -30,12 +29,18 @@ export default function Component() {
 						<div className="w-10" />
 					</div>
 				</header>
-
 				<Tabs defaultValue="profile" className="space-y-6">
-					<TabsList className="grid w-full grid-cols-3">
-						<TabsTrigger value="profile">{translations.userProfile.title}</TabsTrigger>
-						<TabsTrigger value="users">{translations.userManagement.title}</TabsTrigger>
-						<TabsTrigger value="points">{translations.pointManagement.title}</TabsTrigger>
+					<TabsList className="grid w-full grid-cols-3 h-full">
+						<TabsTrigger value="profile" className="text-wrap h-full">
+							{translations.userProfile.title}
+						</TabsTrigger>
+
+						<TabsTrigger value="users" className="text-wrap h-full">
+							{translations.userManagement.title}
+						</TabsTrigger>
+						<TabsTrigger value="points" className="text-wrap h-full">
+							{translations.pointManagement.title}
+						</TabsTrigger>
 					</TabsList>
 					<ProfileTab />
 					<UsersTab />

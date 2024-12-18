@@ -9,11 +9,12 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import { useEffect, useMemo, useRef } from 'react'
 import { Marker, useMap } from 'react-leaflet'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
-import { DEFAULT_LOCATION } from '@/constants/constants'
 import { gradientForSurveyMapMarker } from 'geo-survey-map-shared-modules'
+import { useAppContext } from '@/context/AppContext'
 
 export const TemporaryMarker = () => {
 	const map = useMap()
+	const { appState } = useAppContext()
 	const { formState, handlePickLocation } = useMarkerFormContext()
 	const markerRef = useRef<MarkerType | null>(null)
 	const affectedAreaCircleRef = useRef<L.Circle<any> | null>(null)
@@ -57,13 +58,6 @@ export const TemporaryMarker = () => {
 			}
 		}
 	}, [formState.affectedArea, formState.location, formState.category, map])
-
-	useEffect(() => {
-		if (formState.location.x === DEFAULT_LOCATION.x && formState.location.y === DEFAULT_LOCATION.y) {
-			const mapCenter = map.getCenter()
-			handlePickLocation({ x: mapCenter.lat, y: mapCenter.lng })
-		}
-	}, [map, formState.location, handlePickLocation])
 
 	return (
 		<Marker

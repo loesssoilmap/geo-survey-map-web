@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { TileLayer, useMap } from 'react-leaflet'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
 import { toast } from 'react-toastify'
+import { isDefaultLocation } from '@/lib/utils'
 
 export const MapContent = () => {
 	const map = useMap()
@@ -35,7 +36,7 @@ export const MapContent = () => {
 	}, [])
 
 	useEffect(() => {
-		if (appState.isRightSideBarShown) {
+		if (appState.isRightSideBarShown && !isDefaultLocation(appState.userLocation.x, appState.userLocation.y)) {
 			map.setView({ lat: appState.userLocation.x, lng: appState.userLocation.y }, 17)
 		}
 	}, [map, appState.isRightSideBarShown, appState.userLocation])

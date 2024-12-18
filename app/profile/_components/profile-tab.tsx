@@ -10,6 +10,7 @@ import { formatDateTime, resolveImagePath } from '@/lib/utils'
 import { categoryToAssets } from '@/components/icons'
 import Image from 'next/image'
 import { Loader } from '@/components/loader'
+import { NoDataFallback } from '@/components/no-data-fallback'
 
 export const ProfileTab = () => {
 	const { translations } = useTranslations()
@@ -33,7 +34,7 @@ export const ProfileTab = () => {
 								<>
 									<div className="text-gray-600">{user?.email}</div>
 									<div className="text-xl font-semibold">
-										{translations.userProfile.pts} {data?.length}
+										{translations.userProfile.pts} {data?.length || 0}
 									</div>
 								</>
 							)}
@@ -49,7 +50,7 @@ export const ProfileTab = () => {
 						</div>
 						<div className="space-y-4">
 							<h3 className="text-lg font-medium">{translations.pointsList.title}</h3>
-							<div className="space-y-3">
+							<div className="space-y-3 max-h-52 overflow-y-auto">
 								{isFetching ? (
 									<Loader />
 								) : data?.length ? (
@@ -62,7 +63,7 @@ export const ProfileTab = () => {
 										/>
 									))
 								) : (
-									<NoPointsAddedFallback />
+									<NoDataFallback text={translations.pointsList.noPoints} />
 								)}
 							</div>
 						</div>
@@ -83,16 +84,6 @@ const PointItem: React.FC<{ category: string; createdAt: string; name: string }>
 					<div className="text-sm text-gray-600">{formatDateTime(createdAt)}</div>
 				</div>
 			</div>
-		</div>
-	)
-}
-
-const NoPointsAddedFallback = () => {
-	const { translations } = useTranslations()
-
-	return (
-		<div className="flex items-center justify-center h-12 w-full bg-white rounded-lg border">
-			<p>{translations.pointsList.noPoints}</p>
 		</div>
 	)
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const Logo = () => (
-	<svg width="459" height="70" viewBox="0 0 459 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<svg width="459" height="70" viewBox="0 0 459 122" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
 		<g clipPath="url(#clip0_508_2715)">
 			<path
 				d="M105.32 1.50001C92.59 4.17001 81.62 10.37 72.53 19.1C63.44 10.37 52.46 4.17001 39.74 1.50001C28.01 -0.959992 14.73 -0.489991 0 3.63001V30.13H145.06V3.63001C130.33 -0.489991 117.05 -0.959992 105.32 1.50001Z"

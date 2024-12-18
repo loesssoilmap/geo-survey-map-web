@@ -7,6 +7,7 @@ const montserrat = Montserrat({ subsets: ['latin'] })
 import { MarkerFormContextProvider } from '@/context/AddMarkerFormContext'
 import { LayoutWrapper } from './layout-wrapper'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { ToastProvider } from '@/components/toast'
 const { isAuthenticated, getAccessTokenRaw } = getKindeServerSession()
 
 export const metadata: Metadata = {
@@ -29,7 +30,10 @@ export default async function RootLayout({
 				<TQueryProvider isUserAuthenticated={isUserAuthenticated} accessTokenRaw={accessTokenRaw}>
 					<AppContextProvider>
 						<MarkerFormContextProvider>
-							<LayoutWrapper>{children}</LayoutWrapper>
+							<LayoutWrapper>
+								<ToastProvider />
+								{children}
+							</LayoutWrapper>
 						</MarkerFormContextProvider>
 					</AppContextProvider>
 				</TQueryProvider>

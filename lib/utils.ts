@@ -1,16 +1,17 @@
+import { DEFAULT_LOCATION } from '@/constants/constants'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+const minValue = Math.log(1)
+const maxValue = Math.log(1000)
+const scale = (maxValue - minValue) / 100
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 }
+
 export const resolveImagePath = (relativePath: string) => {
 	return process.env.NEXT_PUBLIC_IMAGES_URL + 'surveyimages/' + relativePath
 }
-
-const minValue = Math.log(1)
-const maxValue = Math.log(1000)
-const scale = (maxValue - minValue) / 100
 
 export const logToLinear = (logValue: number) => {
 	return Math.round(Math.exp(minValue + scale * logValue))
@@ -31,3 +32,5 @@ export const formatDateTime = (input: string): string => {
 
 	return `${hours}:${minutes}, ${day}.${month}.${year}`
 }
+
+export const isDefaultLocation = (x: number, y: number) => x === DEFAULT_LOCATION.x && y === DEFAULT_LOCATION.y

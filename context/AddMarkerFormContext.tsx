@@ -2,14 +2,15 @@
 
 import { createContext, useState, useContext } from 'react'
 import { Category, Survey, Location } from 'geo-survey-map-shared-modules'
+import { DEFAULT_LOCATION } from '@/constants/constants'
 
 export const initialFormStateValue: Survey = {
 	category: '' as Category,
 	description: '',
 	solution: '',
 	location: {
-		x: 0,
-		y: 0,
+		x: DEFAULT_LOCATION.x,
+		y: DEFAULT_LOCATION.y,
 		name: ''
 	},
 	affectedArea: 0,

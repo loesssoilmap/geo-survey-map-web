@@ -155,7 +155,7 @@ export const AppContextProvider: React.FC<Props> = ({ children }) => {
 
 	useEffect(() => {
 		if (data) {
-			setAppState((prev) => ({ ...prev, markers: data }))
+			setAppState((prev) => ({ ...prev, markers: data.filter((survey) => survey.status === 'ACCEPTED') }))
 		}
 	}, [data])
 

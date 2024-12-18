@@ -38,7 +38,9 @@ export const Markers = () => {
 									affectedArea: marker.affectedArea,
 									createdAt: marker.createdAt,
 									user: marker.user,
-									filePath: marker.filePath
+									filePath: marker.filePath,
+									id: marker.id,
+									status: marker.status
 								})
 								handleMarkerInfoModalShow()
 

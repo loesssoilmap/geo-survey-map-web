@@ -26,8 +26,6 @@ const Map = () => {
 		})
 	}
 
-	useEffect(() => {}, [appState.isRightSideBarShown])
-
 	return (
 		<MapContainer
 			center={{ lat: DEFAULT_LOCATION.x, lng: DEFAULT_LOCATION.y }}

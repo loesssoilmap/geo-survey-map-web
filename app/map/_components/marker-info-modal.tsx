@@ -42,7 +42,9 @@ export const MarkerInfoModal = () => {
 						categoryToAssets[appState.markerInfoModal.survey?.category as string]?.gradient
 					} rounded-ss-lg rounded-se-lg p-4 text-white`}>
 					<div>
-						<h3 className="font-bold">{translations.category[appState.markerInfoModal.survey?.category as Category]}</h3>
+						<h3 className="font-bold">
+							{translations.category[appState.markerInfoModal.survey?.category as Category]} ({appState.markerInfoModal.survey?.id})
+						</h3>
 						<small>{formatedDate}</small>
 					</div>
 				</div>
