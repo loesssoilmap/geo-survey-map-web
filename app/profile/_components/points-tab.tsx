@@ -6,56 +6,88 @@ import { Input } from '@/components/ui/input'
 import { TabsContent } from '@/components/ui/tabs'
 import { useTranslations } from '@/hooks/useTranslations'
 import { PointItem } from './point-item'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { useGetAllSurveys, Survey, useUpdateSurveyStatus } from 'geo-survey-map-shared-modules'
+import { Category, useGetAllSurveys, useUpdateSurveyStatus, useDownloadSurveysReport } from 'geo-survey-map-shared-modules'
 import { NoDataFallback } from '@/components/no-data-fallback'
 import { toast } from 'react-toastify'
+import { DatePickerWithRange } from '@/components/date-picker-with-range'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { addDays } from 'date-fns'
+import { DateRange } from 'react-day-picker'
+import { Button } from '@/components/ui/button'
+import { DEFAULT_LOCATION, DEFAULT_REPORT_CREATED_AT, WHOLE_GLOBE_RADIUS } from '@/constants/constants'
 
 export const PointsTab = () => {
 	const { translations } = useTranslations()
-	const { data: surveys } = useGetAllSurveys()
+	const { data: surveys, refetch } = useGetAllSurveys()
 	const { mutateAsync: updateSurveyStatus } = useUpdateSurveyStatus()
 	const [searchTerm, setSearchTerm] = useState('')
-	const [dialogOpen, setDialogOpen] = useState(false)
-	const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null)
-	const [action, setAction] = useState<'accept' | 'reject' | null>(null)
+	const [dateRange, setDateRange] = useState<DateRange>({ from: addDays(new Date(), -30), to: new Date() })
+	const [selectedCategory, setSelectedCategory] = useState<Category | 'ALL'>('ALL')
+	const { mutate: downloadReport } = useDownloadSurveysReport()
 
 	const filteredSurveys = useMemo(() => {
 		if (!surveys) return []
-		return surveys.filter((survey) => survey.id?.toString().toLowerCase().includes(searchTerm.toLowerCase()))
-	}, [surveys, searchTerm])
+		return surveys
+			.filter((survey) => {
+				const matchesSearch = survey.id?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+				const matchesCategory = selectedCategory === 'ALL' || survey.category === selectedCategory
+				const surveyDate = new Date(survey.createdAt)
+				const matchesDateRange = (!dateRange.from || surveyDate >= dateRange.from) && (!dateRange.to || surveyDate <= dateRange.to)
+				return matchesSearch && matchesCategory && matchesDateRange
+			})
+			.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+	}, [surveys, searchTerm, selectedCategory, dateRange])
 
 	const pendingSurveys = useMemo(() => filteredSurveys.filter((survey) => survey.status === 'PENDING'), [filteredSurveys])
-	const acceptedSurveys = useMemo(
+	const verifiedSurveys = useMemo(
 		() => filteredSurveys.filter((survey) => survey.status === 'ACCEPTED' || survey.status === 'REJECTED'),
 		[filteredSurveys]
 	)
 
-	const handleAction = (survey: Survey, action: 'accept' | 'reject') => {
-		setSelectedSurvey(survey)
-		setAction(action)
-		setDialogOpen(true)
-	}
-
-	const confirmAction = async () => {
-		if (selectedSurvey && action) {
-			updateSurveyStatus({
-				status: action === 'accept' ? 'ACCEPTED' : 'REJECTED',
-				surveyId: selectedSurvey.id!
-			})
-
-			const response = await updateSurveyStatus({
-				status: action === 'accept' ? 'ACCEPTED' : 'REJECTED',
-				surveyId: selectedSurvey.id!
-			})
-			if (response.status === 200 && response.data.data) {
+	const updatePointStatus = async (action: 'ACCEPTED' | 'REJECTED', surveyId: number | undefined) => {
+		if (surveyId != undefined) {
+			try {
+				await updateSurveyStatus({
+					status: action,
+					surveyId: surveyId
+				})
 				toast.success('Survey status has been updated')
-			} else {
+				refetch()
+			} catch (error) {
 				toast.error('Oops, something went wrong! Please try again later.')
 			}
-			setDialogOpen(false)
 		}
+	}
+
+	const handleDownloadReport = () => {
+		downloadReport(
+			{
+				page: 0,
+				size: 20,
+				sort: 'createdAt',
+				affectedAreaMin: 0,
+				affectedAreaMax: 1000,
+				createdAtStart: DEFAULT_REPORT_CREATED_AT,
+				createdAtEnd: new Date().toISOString(),
+				centralX: DEFAULT_LOCATION.x,
+				centralY: DEFAULT_LOCATION.y,
+				radiusInMeters: WHOLE_GLOBE_RADIUS
+			},
+			{
+				onSuccess: (data: any) => {
+					const url = window.URL.createObjectURL(new Blob([data.data]))
+					const link = document.createElement('a')
+					link.href = url
+					link.setAttribute('download', 'loess-surveys-report.xlsx')
+					document.body.appendChild(link)
+					link.click()
+					link.remove()
+				},
+				onError: () => {
+					toast.error('Failed to download the report.')
+				}
+			}
+		)
 	}
 
 	return (
@@ -65,26 +97,61 @@ export const PointsTab = () => {
 					<div className="space-y-4">
 						<div className="space-y-4">
 							<h3 className="text-lg font-semibold">{translations.pointManagement.pointsToApprove}</h3>
-							<div className="space-y-2 max-h-[300px] overflow-y-auto">
-								{pendingSurveys.map((survey) => (
-									<PointItem
-										key={survey.id}
-										survey={survey}
-										onAccept={() => handleAction(survey, 'accept')}
-										onReject={() => handleAction(survey, 'reject')}
-									/>
-								))}
+							<div className="space-y-2 max-h-[300px] overflow-y-auto pb-8">
+								{pendingSurveys.length > 0 ? (
+									pendingSurveys?.map((survey) => (
+										<PointItem
+											key={survey.id}
+											survey={survey}
+											onAccept={() => updatePointStatus('ACCEPTED', survey.id)}
+											onReject={() => updatePointStatus('REJECTED', survey.id)}
+										/>
+									))
+								) : (
+									<NoDataFallback text={'No points to approve'} />
+								)}
 							</div>
 						</div>
 						<div className="space-y-4">
-							<div className="space-y-2">
-								<label className="text-sm text-gray-600">{translations.pointManagement.pointId}</label>
-								<Input type="text" placeholder="ID" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+							<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+								<div className="space-y-2">
+									<label className="text-sm text-gray-600">{translations.pointManagement.pointId}</label>
+									<Input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+								</div>
+								<div className="space-y-2">
+									<label className="text-sm text-gray-600">Date Range</label>
+									<DatePickerWithRange date={dateRange} setDate={setDateRange} />
+								</div>
+								<div className="space-y-2">
+									<label className="text-sm text-gray-600">Category</label>
+									<Select value={selectedCategory} onValueChange={(value) => setSelectedCategory(value as Category | 'ALL')}>
+										<SelectTrigger>
+											<SelectValue placeholder="Select category" />
+										</SelectTrigger>
+										<SelectContent>
+											{Object.values(Category).map((category) => (
+												<SelectItem key={category} value={category}>
+													{category.replace(/_/g, ' ')}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
 							</div>
-							<h3 className="text-lg font-semibold">{translations.pointManagement.approvedPoints}</h3>
+							<div className="flex justify-between items-center">
+								<h3 className="text-lg font-semibold">{translations.pointManagement.approvedPoints}</h3>
+								<Button onClick={handleDownloadReport}>Get data report</Button>
+							</div>
 							<div className="space-y-2 max-h-[300px] overflow-y-auto">
-								{acceptedSurveys.length > 0 ? (
-									acceptedSurveys.map((survey) => <PointItem key={survey.id} survey={survey} />)
+								{verifiedSurveys.length > 0 ? (
+									verifiedSurveys.map((survey) => (
+										<PointItem
+											key={survey.id}
+											survey={survey}
+											onAccept={() => updatePointStatus('ACCEPTED', survey.id)}
+											onReject={() => updatePointStatus('REJECTED', survey.id)}
+										/>
+									))
 								) : (
 									<NoDataFallback text={'No points found'} />
 								)}
@@ -93,24 +160,6 @@ export const PointsTab = () => {
 					</div>
 				</CardContent>
 			</Card>
-			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>
-							{action === 'accept' ? 'Are you sure you want to accept this point?' : 'Are you sure you want to reject this point?'}
-						</DialogTitle>
-						<DialogDescription>
-							{action === 'accept' ? 'Are you sure you want to accept this point?' : 'Are you sure you want to reject this point?'}
-						</DialogDescription>
-					</DialogHeader>
-					<DialogFooter>
-						<Button variant="outline" onClick={() => setDialogOpen(false)}>
-							Cancel
-						</Button>
-						<Button onClick={confirmAction}>Confirm</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
 		</TabsContent>
 	)
 }

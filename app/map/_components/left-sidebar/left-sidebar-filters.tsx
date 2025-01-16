@@ -21,7 +21,7 @@ export const LeftSidebarFilters = () => {
 
 	return (
 		<React.Fragment>
-			<small className="font-bold text-gray">{translations.filters}</small>
+			<small className="font-bold opacity-50">{translations.filters}</small>
 			<ul className="flex flex-col gap-2 flex-1 overflow-y-auto min-h-12">
 				{mainFilters.map((item) => (
 					<TooltipProvider key={item.title}>
@@ -44,7 +44,7 @@ export const LeftSidebarFilters = () => {
 				<Accordion type="single" collapsible className="w-full">
 					<AccordionItem value="other" className="border-none">
 						<AccordionTrigger className="py-3 px-2 hover:no-underline">
-							<small className="font-bold text-gray text-xs">{translations.other}</small>
+							<small className="font-bold opacity-50 text-xs">{translations.other}</small>
 						</AccordionTrigger>
 						<AccordionContent>
 							<ul className="flex flex-col gap-2 mt-2">

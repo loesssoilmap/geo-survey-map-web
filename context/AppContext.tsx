@@ -1,58 +1,9 @@
 'use client'
 
 import { createContext, useState, useContext, useEffect } from 'react'
-import { Category, Location, Survey, useGetAllSurveys } from 'geo-survey-map-shared-modules'
-import { DEFAULT_LOCATION } from '@/constants/constants'
-
-interface Props {
-	children?: React.ReactNode
-}
-
-interface MarkerInfoModal {
-	isShown: boolean
-	survey: Survey | null
-}
-
-interface CategoryInfoModal {
-	isShown: boolean
-	category: Category | null
-	categoryInfo: string
-	categoryImageUrl: string
-}
-
-type CategoryInfoModalData = Omit<CategoryInfoModal, 'isShown'>
-
-type Language = 'pl' | 'en'
-
-interface AppState {
-	userLocation: Location
-	isLeftSideBarShown: boolean
-	isRightSideBarShown: boolean
-	mapFilters: Category[]
-	markers: Survey[]
-	markerInfoModal: MarkerInfoModal
-	language: Language
-	shouldCenterOnUser: boolean
-	categoryInfoModal: CategoryInfoModal
-}
-
-interface Context {
-	appState: AppState
-	handleLeftSidebarToggle: () => void
-	handleRightSidebarToggle: () => void
-	updateFilters: (pickedFilter: Category) => void
-	handleSetUserLocation: (location: Location) => void
-	toggleHideFilters: () => void
-	handleMarkerInfoModalShow: () => void
-	handleMarkerInfoModalHide: () => void
-	setMarkerInfoModalData: (survey: Survey) => void
-	setLanguage: (language: Language) => void
-	handleCenterOnUser: (center: boolean) => void
-	handleUpdateMarkersDisplay: (survey: Survey) => void
-	handleCategoryInfoModalShow: () => void
-	handleCategoryInfoModalHide: () => void
-	setCategoryInfoModalData: ({ category, categoryInfo, categoryImageUrl }: CategoryInfoModalData) => void
-}
+import { Category, CountryCode, Location, Survey, useGetAllSurveys } from 'geo-survey-map-shared-modules'
+import { DEFAULT_LANGUAGE, DEFAULT_LOCATION } from '@/constants/constants'
+import { AppState, CategoryInfoModalData, ChidlrenProps, Context } from '@/types/types'
 
 const initialStateValue: AppState = {
 	userLocation: DEFAULT_LOCATION,
@@ -79,13 +30,13 @@ const initialStateValue: AppState = {
 		categoryInfo: '',
 		categoryImageUrl: '/las.jpg'
 	},
-	language: 'en',
+	language: DEFAULT_LANGUAGE,
 	shouldCenterOnUser: true
 }
 
 export const AppContext = createContext<Context | null>(null)
 
-export const AppContextProvider: React.FC<Props> = ({ children }) => {
+export const AppContextProvider: React.FC<ChidlrenProps> = ({ children }) => {
 	const { data } = useGetAllSurveys()
 	const [appState, setAppState] = useState(initialStateValue)
 
@@ -129,16 +80,12 @@ export const AppContextProvider: React.FC<Props> = ({ children }) => {
 		setAppState((prev) => ({ ...prev, markerInfoModal: { ...prev.markerInfoModal, survey } }))
 	}
 
-	const setLanguage = (language: Language) => {
+	const setLanguage = (language: CountryCode) => {
 		setAppState((prev) => ({ ...prev, language }))
 	}
 
 	const handleCenterOnUser = (center: boolean) => {
 		setAppState((prev) => ({ ...prev, shouldCenterOnUser: center }))
-	}
-
-	const handleUpdateMarkersDisplay = (survey: Survey) => {
-		setAppState((prev) => ({ ...prev, markers: [...prev.markers, survey] }))
 	}
 
 	const handleCategoryInfoModalShow = () => {
@@ -159,6 +106,31 @@ export const AppContextProvider: React.FC<Props> = ({ children }) => {
 		}
 	}, [data])
 
+	useEffect(() => {
+		setLanguage(getLanguageFromLocalStorage())
+	}, [])
+
+	useEffect(() => {
+		setLanguageInLocalStorage(appState.language)
+	}, [appState.language])
+
+	const getLanguageFromLocalStorage = () => {
+		try {
+			const localLanguage = localStorage.getItem('language')
+
+			if (localLanguage) {
+				return localLanguage as CountryCode
+			}
+			return DEFAULT_LANGUAGE
+		} catch (error) {
+			return DEFAULT_LANGUAGE
+		}
+	}
+
+	const setLanguageInLocalStorage = (language: CountryCode) => {
+		return localStorage.setItem('language', language)
+	}
+
 	return (
 		<AppContext.Provider
 			value={{
@@ -173,7 +145,6 @@ export const AppContextProvider: React.FC<Props> = ({ children }) => {
 				setMarkerInfoModalData,
 				setLanguage,
 				handleCenterOnUser,
-				handleUpdateMarkersDisplay,
 				handleCategoryInfoModalShow,
 				handleCategoryInfoModalHide,
 				setCategoryInfoModalData

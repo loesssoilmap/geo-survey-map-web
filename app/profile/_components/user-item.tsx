@@ -3,53 +3,23 @@
 import { useState } from 'react'
 import { User, Settings, Ban } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Trash2 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Permissions } from 'geo-survey-map-shared-modules'
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger
-} from '@/components/ui/alert-dialog'
 import { cn } from '@/lib/utils'
+import { UserItemProps } from '@/types/types'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 
-interface UserItemProps {
-	userKindeId: string
-	email: string
-	permissions: string[]
-	isBanned: boolean
-	onPermissionsChange: (permissions: Permissions[]) => void
-	onBanUser: () => void
-}
-
-export const UserItem: React.FC<UserItemProps> = ({ userKindeId, email, permissions, isBanned, onPermissionsChange, onBanUser }) => {
+export const UserItem: React.FC<UserItemProps> = ({ email, permissions, isBanned, onPermissionsChange, onBanUser }) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const [selectedPermissions, setSelectedPermissions] = useState<string[]>(permissions)
+	const { user } = useKindeBrowserClient()
 
-	interface UserItemProps {
-		userKindeId: string
-		email: string
-		permissions: string[]
-		isBanned: boolean
-		onPermissionsChange: (permissions: string[]) => void
-		onDeleteUser: () => void
-		onBanUser: () => void
-	}
 	const handlePermissionChange = (permission: string, checked: boolean) => {
 		setSelectedPermissions((prev) => (checked ? [...prev, permission] : prev.filter((p) => p !== permission)))
-	}
-
-	const handleSave = () => {
 		onPermissionsChange(selectedPermissions as Permissions[])
-		setIsOpen(false)
 	}
 
 	return (
@@ -85,30 +55,22 @@ export const UserItem: React.FC<UserItemProps> = ({ userKindeId, email, permissi
 								</div>
 							))}
 						</ScrollArea>
-						<Button onClick={handleSave}>Zapisz uprawnienia</Button>
 					</DialogContent>
 				</Dialog>
-				<AlertDialog>
-					<AlertDialogTrigger asChild>
-						<Button variant="destructive" size="icon">
-							<Ban className="h-4 w-4" />
-						</Button>
-					</AlertDialogTrigger>
-					<AlertDialogContent>
-						<AlertDialogHeader>
-							<AlertDialogTitle>Czy na pewno chcesz {isBanned ? 'odbanować' : 'zbanować'} tego użytkownika?</AlertDialogTitle>
-							<AlertDialogDescription>
-								{isBanned
-									? 'Odbanowanie użytkownika przywróci mu dostęp do systemu.'
-									: 'Zbanowanie użytkownika uniemożliwi mu dostęp do systemu.'}
-							</AlertDialogDescription>
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-							<AlertDialogCancel>Anuluj</AlertDialogCancel>
-							<AlertDialogAction onClick={onBanUser}>{isBanned ? 'Odbanuj' : 'Zbanuj'}</AlertDialogAction>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialog>
+				{user?.email !== email ? (
+					<TooltipProvider key={email}>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Button variant="destructive" size="icon" onClick={onBanUser}>
+									<Ban className="h-4 w-4" />
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent className="z-800">
+								<p>Ban user. This will prevent them from adding points to the map</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
+				) : null}
 			</div>
 		</div>
 	)

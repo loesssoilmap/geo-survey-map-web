@@ -3,6 +3,7 @@
 import { Box } from '@/components/box'
 import { categoryToAssets } from '@/components/icons'
 import { useAppContext } from '@/context/AppContext'
+import { useGetRole } from '@/hooks/useGetRole'
 import { useTranslations } from '@/hooks/useTranslations'
 import { formatDateTime, resolveImagePath } from '@/lib/utils'
 import { Category } from 'geo-survey-map-shared-modules'
@@ -13,8 +14,8 @@ export const MarkerInfoModal = () => {
 	const { translations } = useTranslations()
 	const { appState, handleMarkerInfoModalHide } = useAppContext()
 	const toggleInfoModalStyles = appState.markerInfoModal.isShown ? '' : 'translate-y-full '
-
 	const modalRef = useRef<HTMLDivElement | null>(null)
+	const { isBasicUser } = useGetRole()
 
 	useEffect(() => {
 		const handleClickOutside = (event: any) => {
@@ -43,7 +44,8 @@ export const MarkerInfoModal = () => {
 					} rounded-ss-lg rounded-se-lg p-4 text-white`}>
 					<div>
 						<h3 className="font-bold">
-							{translations.category[appState.markerInfoModal.survey?.category as Category]} ({appState.markerInfoModal.survey?.id})
+							{translations.category[appState.markerInfoModal.survey?.category as Category]}
+							{!isBasicUser ? `(${appState.markerInfoModal.survey?.id})` : null}
 						</h3>
 						<small>{formatedDate}</small>
 					</div>
@@ -51,29 +53,31 @@ export const MarkerInfoModal = () => {
 				<div className="w-full flex p-4 gap-2">
 					<div className="w-1/2">
 						<div>
-							<small className="text-xs font-bold text-gray">{translations.pointDetails.placeName}</small>
+							<small className="text-xs font-bold opacity-50">{translations.pointDetails.placeName}</small>
 							<p className="text-sm font-medium break-words">{appState.markerInfoModal.survey?.location.name}</p>
 						</div>
 						<div>
-							<small className="text-xs font-bold text-gray">{translations.pointDetails.affectedArea}</small>
+							<small className="text-xs font-bold opacity-50">{translations.pointDetails.affectedArea}</small>
 							<p className="text-sm font-medium break-words">{appState.markerInfoModal.survey?.affectedArea} m</p>
 						</div>
 						<div>
-							<small className="text-xs font-bold text-gray">{translations.pointDetails.problemDescription}</small>
+							<small className="text-xs font-bold opacity-50">{translations.pointDetails.problemDescription}</small>
 							<p className="text-sm font-medium break-words">{appState.markerInfoModal.survey?.description}</p>
 						</div>
 						<div>
-							<small className="text-xs font-bold text-gray">{translations.pointDetails.problemSolution}</small>
+							<small className="text-xs font-bold opacity-50">{translations.pointDetails.problemSolution}</small>
 							<p className="text-sm font-medium break-words">{appState.markerInfoModal.survey?.solution}</p>
 						</div>
 					</div>
-					<Image
-						src={resolveImagePath(appState.markerInfoModal.survey?.filePath!)}
-						alt="problem"
-						width={200}
-						height={200}
-						className="w-1/2 object-cover rounded-lg"
-					/>
+					{appState.markerInfoModal.survey?.filePath ? (
+						<Image
+							src={resolveImagePath(appState.markerInfoModal.survey?.filePath!)}
+							alt="problem"
+							width={200}
+							height={200}
+							className="w-1/2 object-cover rounded-lg"
+						/>
+					) : null}
 				</div>
 			</Box>
 		</div>

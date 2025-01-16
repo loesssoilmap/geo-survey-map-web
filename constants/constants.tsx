@@ -1,5 +1,5 @@
 import { categoryToAssets } from '@/components/icons'
-import { Category } from 'geo-survey-map-shared-modules'
+import { Category, CountryCode } from 'geo-survey-map-shared-modules'
 
 export const FILTERS = [
 	{
@@ -46,7 +46,14 @@ export const FILTERS = [
 
 export const DEFAULT_LOCATION = {
 	x: 50.1109,
-	y: 8.6821
+	y: 8.6821,
+	name: '',
+	countryCode: 'DE' as CountryCode
 }
 export const DEFAULT_ZOOM = 5
 export const DEFAULT_MIN_ZOOM = 3
+export const DEFAULT_LANGUAGE = 'EN' as CountryCode
+export const DEFAULT_COUNTRYCODE = 'DE'
+export const MAX_INPUT_LENGTH = 255
+export const DEFAULT_REPORT_CREATED_AT = '2025-01-01T12:00:00Z'
+export const WHOLE_GLOBE_RADIUS = 20037509

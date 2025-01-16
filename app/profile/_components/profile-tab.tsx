@@ -5,17 +5,40 @@ import { TabsContent } from '@/components/ui/tabs'
 import { useTranslations } from '@/hooks/useTranslations'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { User } from 'lucide-react'
-import { useGetUsersSurveys } from 'geo-survey-map-shared-modules'
+import { useDeleteUserSelf, useGetUsersSurveys } from 'geo-survey-map-shared-modules'
 import { formatDateTime, resolveImagePath } from '@/lib/utils'
 import { categoryToAssets } from '@/components/icons'
 import Image from 'next/image'
 import { Loader } from '@/components/loader'
 import { NoDataFallback } from '@/components/no-data-fallback'
+import { toast } from 'react-toastify'
+import { DeleteAccountModal } from './delete-account-modal'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export const ProfileTab = () => {
 	const { translations } = useTranslations()
 	const { user, isLoading } = useKindeBrowserClient()
 	const { data, isFetching } = useGetUsersSurveys()
+	const { mutateAsync: deleteAccount } = useDeleteUserSelf()
+	const router = useRouter()
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+	const handleDeleteAccount = async () => {
+		setIsDeleteModalOpen(true)
+	}
+
+	const confirmDeleteAccount = async () => {
+		try {
+			await deleteAccount()
+			toast.success(translations.userProfile.accountDeleted)
+			router.push('/api/auth/logout')
+		} catch (error) {
+			toast.error(translations.userProfile.deleteError)
+		} finally {
+			setIsDeleteModalOpen(false)
+		}
+	}
 
 	return (
 		<TabsContent value="profile" className="space-y-6">
@@ -44,7 +67,7 @@ export const ProfileTab = () => {
 					<div className="mt-8 space-y-6">
 						<div className="space-y-4">
 							<h3 className="text-lg font-medium">{translations.userProfile.manageAccount}</h3>
-							<Button variant="destructive" className="w-full">
+							<Button variant="destructive" className="w-full" onClick={handleDeleteAccount}>
 								{translations.userProfile.removeAccount}
 							</Button>
 						</div>
@@ -70,6 +93,17 @@ export const ProfileTab = () => {
 					</div>
 				</CardContent>
 			</Card>
+			<DeleteAccountModal
+				isOpen={isDeleteModalOpen}
+				onClose={() => setIsDeleteModalOpen(false)}
+				onConfirm={confirmDeleteAccount}
+				translations={{
+					title: translations.userProfile.deleteModalTitle,
+					description: translations.userProfile.deleteModalDescription,
+					cancel: translations.userProfile.deleteModalCancel,
+					confirm: translations.userProfile.deleteModalConfirm
+				}}
+			/>
 		</TabsContent>
 	)
 }
@@ -77,8 +111,14 @@ export const ProfileTab = () => {
 const PointItem: React.FC<{ category: string; createdAt: string; name: string }> = ({ category, createdAt, name }) => {
 	return (
 		<div className="flex items-center justify-between gap-4 rounded-lg border bg-white">
-			<div className="flex gap-4 p-4">
-				<Image src={categoryToAssets[category].iconUrl} alt={'Icon of category'} width={45} height={45} className="rounded-full" />
+			<div className="flex gap-4 p-4 items-center">
+				<Image
+					src={categoryToAssets[category].iconUrl}
+					alt={'Icon of category'}
+					width={45}
+					height={45}
+					className="rounded-full h-[45px] w-[45px]"
+				/>
 				<div>
 					<div className="font-medium">{name}</div>
 					<div className="text-sm text-gray-600">{formatDateTime(createdAt)}</div>

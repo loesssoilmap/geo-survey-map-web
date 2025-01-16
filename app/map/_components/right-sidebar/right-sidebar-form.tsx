@@ -1,8 +1,7 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent } from 'react'
 import { Category, useCreateSurvey, useFileUpload } from 'geo-survey-map-shared-modules'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { useAppContext } from '@/context/AppContext'
-import { FILTERS } from '@/constants/constants'
+import { FILTERS, MAX_INPUT_LENGTH } from '@/constants/constants'
 import { Camera, CircleHelp } from 'lucide-react'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
 import { toast } from 'react-toastify'
@@ -13,8 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-
-const MAX_INPUT_LENGTH = 255
 
 interface RightSidebarFormProps {
 	handleClose: () => void
@@ -27,20 +24,24 @@ interface RightSidebarFormProps {
 export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose, fileName, setFileName, selectSolution, setSelectSolution }) => {
 	const { translations } = useTranslations()
 	const { formState } = useMarkerFormContext()
-	const { handleUpdateMarkersDisplay } = useAppContext()
 	const { mutateAsync: createSurvey } = useCreateSurvey()
 
 	const handleAddMarker = async () => {
 		const response = await createSurvey({
 			category: formState.category,
 			description: formState.description,
-			locationRequest: formState.location,
+			locationRequest: {
+				// @ts-expect-error
+				name: formState.location.name,
+				x: formState.location.x,
+				y: formState.location.y,
+				countryCode: formState.location.countryCode
+			},
 			solution: formState.solution,
 			affectedArea: formState.affectedArea,
 			filePath: formState.filePath
 		})
 		if (response.status === 200 && response.data.data) {
-			handleUpdateMarkersDisplay(response.data.data)
 			toast.success(translations.addPointForm.successMessage)
 		} else {
 			toast.error(translations.addPointForm.errorMessage)
@@ -93,7 +94,7 @@ const Categories = () => {
 
 	return (
 		<div className="overflow-y-auto min-h-20">
-			<small className="font-bold text-gray">{translations.categories}</small>
+			<small className="font-bold opacity-50">{translations.categories}</small>
 			<ul className="flex flex-col gap-2 flex-1">
 				{FILTERS.map((item) => (
 					<li key={item.title} className="flex justify-between gap-2 min-h-12">
@@ -127,7 +128,7 @@ const AffectedArea = () => {
 	return (
 		<div className="space-y-4">
 			<div className="flex items-center justify-between">
-				<small className="font-bold text-gray">{translations.addPointForm.affectedArea.title}</small>
+				<small className="font-bold opacity-50">{translations.addPointForm.affectedArea.title}</small>
 				<span className="text-sm font-medium">
 					{formState.affectedArea} {formState.affectedArea === 1 ? 'm' : 'm'}
 				</span>
@@ -141,7 +142,7 @@ const AffectedArea = () => {
 				onValueChange={handleSliderChange}
 				className="w-full"
 			/>
-			<div className="flex justify-between text-xs font-bold text-gray">
+			<div className="flex justify-between text-xs font-bold opacity-50">
 				<span>1 m</span>
 				<span>1000 m</span>
 			</div>
@@ -158,7 +159,6 @@ const AreaPhoto: React.FC<AreaPhoto> = ({ fileName, setFileName }) => {
 	const { translations } = useTranslations()
 	const { handleFilePath } = useMarkerFormContext()
 	const { mutateAsync: uploadFileAsync } = useFileUpload()
-	const { accessTokenRaw } = useKindeBrowserClient()
 
 	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const photoAsset = event.target.files?.[0] || null
@@ -192,13 +192,13 @@ const AreaPhoto: React.FC<AreaPhoto> = ({ fileName, setFileName }) => {
 
 	return (
 		<div>
-			<small className="font-bold text-gray">{translations.addPointForm.addPhoto.title}</small>
+			<small className="font-bold opacity-50">{translations.addPointForm.addPhoto.title}</small>
 			<div className="relative">
 				<input type="file" id="area-photo" accept=".png,.jpg,.jpeg" onChange={handleFileChange} className="sr-only" />
 				<label
 					htmlFor="area-photo"
 					className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 cursor-pointer">
-					<Camera className={`w-5 h-5 mr-2 -ml-1 ${fileName ? 'text-black' : 'text-gray'}`} aria-hidden="true" />
+					<Camera className={`w-5 h-5 mr-2 -ml-1 ${fileName ? 'text-black' : 'opacity-50'}`} aria-hidden="true" />
 					<span>{fileName}</span>
 				</label>
 			</div>
@@ -212,7 +212,7 @@ const AreaName = () => {
 
 	return (
 		<div>
-			<Label htmlFor="area-name" className="text-sm font-bold text-gray">
+			<Label htmlFor="area-name" className="text-sm font-bold opacity-50">
 				{translations.addPointForm.description.placeName.label}
 			</Label>
 			<Input id="area-name" value={formState?.location?.name} onChange={(e) => handlePickName(e.target.value)} maxLength={MAX_INPUT_LENGTH} />
@@ -226,7 +226,7 @@ const AreaDescription = () => {
 
 	return (
 		<div>
-			<Label htmlFor="area-description" className="text-sm font-bold text-gray">
+			<Label htmlFor="area-description" className="text-sm font-bold opacity-50">
 				{translations.addPointForm.description.problemDescription.label}
 			</Label>
 			<Textarea
@@ -264,7 +264,7 @@ const AreaSolution: React.FC<AreaSolutionProps> = ({ selectSolution, setSelectSo
 
 	return (
 		<div>
-			<Label htmlFor="solution-select" className="text-sm font-bold text-gray">
+			<Label htmlFor="solution-select" className="text-sm font-bold opacity-50">
 				{translations.addPointForm.solution.title}
 			</Label>
 			<Select onValueChange={handleSelectChange} value={selectSolution}>

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import jwksClient from 'jwks-rsa'
 import jwt from 'jsonwebtoken'
 import type { JwtPayload } from 'jsonwebtoken'
-import { postRegisterUser, updateApiClient } from 'geo-survey-map-shared-modules'
+import { Permissions, postRegisterUser, updateApiClient } from 'geo-survey-map-shared-modules'
 
 const client = jwksClient({
 	jwksUri: `${process.env.KINDE_ISSUER_URL}/.well-known/jwks.json`
@@ -35,8 +35,7 @@ export async function POST(req: Request) {
 
 				await postRegisterUser({
 					email: user?.email!,
-					kindeId: user?.id!,
-					status: 'ACTIVE'
+					kindeId: user?.id!
 				})
 
 				break

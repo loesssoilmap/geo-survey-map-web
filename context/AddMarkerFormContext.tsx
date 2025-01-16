@@ -2,7 +2,7 @@
 
 import { createContext, useState, useContext } from 'react'
 import { Category, Survey, Location } from 'geo-survey-map-shared-modules'
-import { DEFAULT_LOCATION } from '@/constants/constants'
+import { DEFAULT_COUNTRYCODE, DEFAULT_LOCATION } from '@/constants/constants'
 
 export const initialFormStateValue: Survey = {
 	category: '' as Category,
@@ -11,12 +11,14 @@ export const initialFormStateValue: Survey = {
 	location: {
 		x: DEFAULT_LOCATION.x,
 		y: DEFAULT_LOCATION.y,
-		name: ''
+		name: '',
+		countryCode: DEFAULT_COUNTRYCODE
 	},
 	affectedArea: 0,
 	user: {},
 	filePath: '',
-	createdAt: ''
+	createdAt: '',
+	status: 'PENDING'
 }
 
 interface Context {
@@ -53,7 +55,10 @@ export const MarkerFormContextProvider: React.FC<{ children?: React.ReactNode }>
 	}
 
 	const resetToInitial = (location: Location) => {
-		setFormState({ ...initialFormStateValue, location: { x: location.x, y: location.y, name: initialFormStateValue.location.name } })
+		setFormState({
+			...initialFormStateValue,
+			location: { x: location.x, y: location.y, name: initialFormStateValue.location.name, countryCode: location.countryCode }
+		})
 	}
 
 	const handlePickName = (name: string) => {
@@ -62,6 +67,7 @@ export const MarkerFormContextProvider: React.FC<{ children?: React.ReactNode }>
 			location: {
 				x: prev.location.x,
 				y: prev.location.y,
+				countryCode: prev.location.countryCode,
 				name
 			}
 		}))

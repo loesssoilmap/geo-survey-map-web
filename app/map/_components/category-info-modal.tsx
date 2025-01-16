@@ -41,7 +41,7 @@ export const CategoryInfoModal = () => {
 				<div className="w-full flex p-4 gap-2">
 					<div className="w-1/2">
 						<div>
-							<small className="text-xs font-bold text-gray">How to recognize this issue</small>
+							<small className="text-xs font-bold">How to recognize this issue</small>
 							<p className="text-sm font-medium break-words">{appState.categoryInfoModal.categoryInfo}</p>
 						</div>
 					</div>

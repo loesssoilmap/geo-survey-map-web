@@ -106,3 +106,9 @@
 	font-weight: bold;
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
+
+.dotted-background {
+	background-color: #ffffff;
+	background-image: radial-gradient(#deede0 2px, #ffffff 0.5px);
+	background-size: 30px 30px;
+}

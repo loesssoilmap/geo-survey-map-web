@@ -3,7 +3,8 @@ import { fallbacks } from 'geo-survey-map-shared-modules'
 
 export const useTranslations = () => {
 	const { appState } = useAppContext()
-	const translations = fallbacks[appState.language].Default
+	// @ts-ignore
+	const translations = fallbacks[appState.language.toLowerCase()].Default
 
 	return { translations }
 }

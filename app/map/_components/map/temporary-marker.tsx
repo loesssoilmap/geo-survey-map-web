@@ -9,12 +9,11 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import { useEffect, useMemo, useRef } from 'react'
 import { Marker, useMap } from 'react-leaflet'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
-import { gradientForSurveyMapMarker } from 'geo-survey-map-shared-modules'
-import { useAppContext } from '@/context/AppContext'
+import { CountryCode, gradientForSurveyMapMarker } from 'geo-survey-map-shared-modules'
+import { getCountryCode } from '@/lib/utils'
 
 export const TemporaryMarker = () => {
 	const map = useMap()
-	const { appState } = useAppContext()
 	const { formState, handlePickLocation } = useMarkerFormContext()
 	const markerRef = useRef<MarkerType | null>(null)
 	const affectedAreaCircleRef = useRef<L.Circle<any> | null>(null)
@@ -25,10 +24,17 @@ export const TemporaryMarker = () => {
 
 	const eventHandlers = useMemo(
 		() => ({
-			dragend() {
+			async dragend() {
 				const marker = markerRef.current
 				if (marker != null) {
-					handlePickLocation({ x: marker.getLatLng().lat, y: marker.getLatLng().lng })
+					const placeData = await getCountryCode(marker.getLatLng().lat, marker.getLatLng().lng)
+
+					handlePickLocation({
+						x: marker.getLatLng().lat,
+						y: marker.getLatLng().lng,
+						name: placeData.placeName,
+						countryCode: placeData.countryCode as CountryCode
+					})
 				}
 			}
 		}),

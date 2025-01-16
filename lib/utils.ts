@@ -1,4 +1,5 @@
 import { DEFAULT_LOCATION } from '@/constants/constants'
+import { RolesClaim } from '@/types/types'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 const minValue = Math.log(1)
@@ -34,3 +35,37 @@ export const formatDateTime = (input: string): string => {
 }
 
 export const isDefaultLocation = (x: number, y: number) => x === DEFAULT_LOCATION.x && y === DEFAULT_LOCATION.y
+
+export const checkRole = (roles: RolesClaim, roleKey: string) => {
+	if (!roles) return false
+	return roles.value?.some((role) => role.key === roleKey)
+}
+
+export const getCountryCode = async (
+	lat: number,
+	lng: number
+): Promise<{
+	countryCode: string
+	placeName: string
+}> => {
+	try {
+		const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+		const data = await response.json()
+		const countryCode = data.address.country_code ? data.address.country_code.toUpperCase() : DEFAULT_LOCATION.countryCode
+		const splittedPlaceName = data.display_name.split(',')
+		const placeName =
+			splittedPlaceName[0] !== 'undefined' && splittedPlaceName[0] !== 'undefined' && splittedPlaceName[0] !== 'undefined'
+				? `${splittedPlaceName[0]}, ${splittedPlaceName[1]}, ${splittedPlaceName[2]}`
+				: DEFAULT_LOCATION.name
+
+		return {
+			countryCode,
+			placeName
+		}
+	} catch (error) {
+		return {
+			countryCode: DEFAULT_LOCATION.countryCode,
+			placeName: DEFAULT_LOCATION.name
+		}
+	}
+}

@@ -8,7 +8,8 @@ import { useEffect } from 'react'
 import { TileLayer, useMap } from 'react-leaflet'
 import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
 import { toast } from 'react-toastify'
-import { isDefaultLocation } from '@/lib/utils'
+import { getCountryCode, isDefaultLocation } from '@/lib/utils'
+import { DEFAULT_COUNTRYCODE, DEFAULT_LOCATION } from '@/constants/constants'
 
 export const MapContent = () => {
 	const map = useMap()
@@ -16,14 +17,26 @@ export const MapContent = () => {
 	const { handlePickLocation } = useMarkerFormContext()
 
 	useEffect(() => {
-		const handleLocationFound = (e: any) => {
+		const handleLocationFound = async (e: any) => {
+			const placeData = await getCountryCode(e.latlng.lat, e.latlng.lng)
+
 			map.setView({ lat: e.latlng.lat, lng: e.latlng.lng }, 17)
-			handleSetUserLocation({ x: e.latlng.lat, y: e.latlng.lng })
-			handlePickLocation({ x: e.latlng.lat, y: e.latlng.lng })
+			handleSetUserLocation({
+				x: e.latlng.lat,
+				y: e.latlng.lng,
+				countryCode: placeData?.countryCode ?? DEFAULT_COUNTRYCODE,
+				name: placeData?.placeName ?? DEFAULT_LOCATION.name
+			})
+			handlePickLocation({
+				x: e.latlng.lat,
+				y: e.latlng.lng,
+				countryCode: placeData?.countryCode ?? DEFAULT_COUNTRYCODE,
+				name: placeData?.placeName ?? DEFAULT_LOCATION.name
+			})
 		}
 
 		const handleLocationError = () => {
-			toast('Nie udało się namierzyć twojej lokalizacji, spróbuj odświeżyć stronę.', { type: 'error' })
+			toast('Failed to locate your position, please try refreshing the page.', { type: 'error' })
 		}
 
 		map.locate({ enableHighAccuracy: true, watch: false }).on('locationfound', handleLocationFound).on('locationerror', handleLocationError)
