@@ -10,7 +10,7 @@ const nextConfig = {
 				pathname: '/surveyimages/**'
 			},
 			{
-				protocol: 'http',
+				protocol: 'https',
 				hostname: 'loess.wmi.amu.edu.pl',
 				pathname: '/**'
 			},
