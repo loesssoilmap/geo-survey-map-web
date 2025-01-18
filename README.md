@@ -1,36 +1,140 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# LOESS Soil Map
+
+Welcome to the **LOESS Soil Map** project! This web application is designed for crowdmapping soil issues. Users, particularly gardeners and nature enthusiasts, can add, view, and manage points on a map that highlight soil problems such as erosion, dryness, wetness, or crusting. This project is built using **Next.js 14** and employs cutting-edge tools for optimal performance.
+
+## Features
+
+- **Interactive Map**: Add and view points with details about soil issues.
+- **User Profiles**: Manage your contributions and account details.
+- **Admin Panel**: Oversee and moderate user activities and map points.
+- **Responsive Design**: Accessible on both web and mobile devices.
+
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed on your machine:
+
+- **Node.js** (version 18 or higher)
+- **npm** or **yarn**
+- **Git**
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/GeoSurveyMap/LOESS-Soil-Map.git
+cd LOESS-Soil-Map
+```
+
+### 2. Install Dependencies
+
+Install the required packages using npm or yarn:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+### 3. Run the Development Server
+
+Start the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open your browser and navigate to `http://localhost:3000` to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Building the Project
 
-## Learn More
+To create a production-ready build, use the following command:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+# or
+yarn build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This will generate an optimized build in the `.next` folder.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Running the Production Build
 
-## Deploy on Vercel
+After building the project, start the production server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run start
+# or
+yarn start
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+By default, the application will be accessible at `http://localhost:3000`.
+
+---
+
+## Project Structure
+
+The project is organized as follows:
+
+```
+.
+├── app
+│   ├── _components       # Reusable components for app-specific features
+│   ├── api               # API routes for authentication and webhooks
+│   ├── map               # Map-related components and logic
+│   └── profile           # Components for user profiles
+├── components            # Shared components across the application
+├── constants             # Global constants
+├── context               # React context for managing app state
+├── hooks                 # Custom hooks for reusable logic
+├── lib                   # Utility functions
+├── providers             # Providers for context and third-party libraries
+├── public                # Public assets (images, icons, etc.)
+├── styles                # Global and component-specific styles
+├── types                 # TypeScript types
+└── ...                   # Configuration files (Next.js, Tailwind, etc.)
+```
+
+---
+
+## Scripts
+
+The following scripts are available in the `package.json` file:
+
+- `npm run dev`: Start the development server.
+- `npm run build`: Build the project for production.
+- `npm run start`: Start the production server.
+- `npm run lint`: Lint the codebase for issues.
+
+---
+
+## Dependencies
+
+Key dependencies used in this project:
+
+- **Next.js 14**: Framework for building React applications.
+- **Leaflet**: Interactive map rendering.
+- **React-Leaflet**: React bindings for Leaflet.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Kinde**: Authentication and user management.
+- **React Query**: Data fetching and state management.
+
+---
+
+## Contribution
+
+Contributions are welcome! If you find a bug or have a feature request, please open an issue or submit a pull request.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for more details.
