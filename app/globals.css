@@ -112,3 +112,7 @@
 	background-image: radial-gradient(#deede0 2px, #ffffff 0.5px);
 	background-size: 30px 30px;
 }
+
+.text-align-last-center {
+	text-align-last: center;
+}

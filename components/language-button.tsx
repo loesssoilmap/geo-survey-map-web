@@ -10,7 +10,7 @@ export const LanguageButton: React.FC<{ size?: string }> = ({ size = '14' }) => 
 	const { appState, setLanguage } = useAppContext()
 
 	return (
-		<button className={cn(actionButtonStyles, size ? `w-${size} h-${size}` : '')}>
+		<button className={cn(actionButtonStyles, size ? `w-${size} h-${size}` : '', 'text-align-last-center')}>
 			<select
 				className={cn('appearance-none h-full text-center cursor-pointer font-bold text-xs bg-transparent', size ? `w-${size}` : '')}
 				value={appState.language}
