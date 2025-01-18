@@ -14,7 +14,7 @@ const { isAuthenticated, getAccessTokenRaw } = getKindeServerSession()
 export const metadata: Metadata = {
 	title: 'LOESS Soil Map',
 	description:
-		'The purpose of this platform is to gather your experiences and opinions on observable climate changes in your local environment. Share your insights on how climate shifts are affecting your community and contribute to a growing database of firsthand accounts. Together, we can build a comprehensive picture of the impact of climate change around the world.'
+		'Shape The Future Of Soil Education. Together, we map, connect, and educate to cultivate soil literacy, fostering awareness, engagement, and sustainable practices.'
 }
 
 export default async function RootLayout({
