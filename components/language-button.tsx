@@ -1,5 +1,6 @@
 'use client'
 
+import { LANGUAGES } from '@/constants/constants'
 import { useAppContext } from '@/context/AppContext'
 import { cn } from '@/lib/utils'
 const actionButtonStyles =
@@ -14,12 +15,11 @@ export const LanguageButton: React.FC<{ size?: string }> = ({ size = '14' }) => 
 				className={cn('appearance-none h-full text-center cursor-pointer font-bold text-xs bg-transparent', size ? `w-${size}` : '')}
 				value={appState.language}
 				onChange={(e) => setLanguage(e.target.value as any)}>
-				<option className="" value="pl">
-					PL
-				</option>
-				<option className="text-[6px]" value="en">
-					EN
-				</option>
+				{LANGUAGES.map((lang) => (
+					<option key={lang} className="text-[6px]" value={lang}>
+						{lang.toUpperCase()}
+					</option>
+				))}
 			</select>
 		</button>
 	)

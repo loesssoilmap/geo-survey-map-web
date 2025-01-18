@@ -6,10 +6,13 @@ import { categoryToAssets } from '@/components/icons'
 import { formatDateTime } from '@/lib/utils'
 import { Check, X } from 'lucide-react'
 import { PointItemProps } from '@/types/types'
+import { useTranslations } from '@/hooks/useTranslations'
 
-export const PointItem: React.FC<PointItemProps> = ({ survey, onAccept, onReject }) => {
+export const PointItem: React.FC<PointItemProps> = ({ survey, onAccept, onReject, setIsOpen, showActionButtons = false }) => {
+	const { translations } = useTranslations()
+
 	return (
-		<div className="p-4 border rounded bg-white shadow-md flex flex-col sm:flex-row justify-between">
+		<div className="p-4 border rounded-lg bg-white shadow-md flex flex-col sm:flex-row justify-between" onClick={setIsOpen}>
 			<div className="flex items-center space-x-4">
 				<Image
 					src={categoryToAssets[survey.category as Category].iconUrl}
@@ -29,18 +32,34 @@ export const PointItem: React.FC<PointItemProps> = ({ survey, onAccept, onReject
 					className={`text-sm font-medium ${
 						survey.status === 'ACCEPTED' ? 'text-green-500' : survey.status === 'PENDING' ? 'text-yellow-500' : 'text-red-500'
 					}`}>
-					{survey.status}
+					{translations.pointStatus[survey.status]}
 				</div>
-				{survey.status !== 'ACCEPTED' ? (
-					<Button onClick={onAccept} variant="default" size="sm">
-						<Check />
-					</Button>
-				) : null}
-				{survey.status !== 'REJECTED' ? (
-					<Button onClick={onReject} variant="destructive" size="sm">
-						<X />
-					</Button>
-				) : null}
+				{showActionButtons && (
+					<>
+						{survey.status !== 'ACCEPTED' && onAccept ? (
+							<Button
+								onClick={(e) => {
+									e.stopPropagation()
+									onAccept()
+								}}
+								variant="default"
+								size="sm">
+								<Check />
+							</Button>
+						) : null}
+						{survey.status !== 'REJECTED' && onReject ? (
+							<Button
+								onClick={(e) => {
+									e.stopPropagation()
+									onReject()
+								}}
+								variant="destructive"
+								size="sm">
+								<X />
+							</Button>
+						) : null}
+					</>
+				)}
 			</div>
 		</div>
 	)

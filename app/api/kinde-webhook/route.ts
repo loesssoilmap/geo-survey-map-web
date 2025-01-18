@@ -2,14 +2,15 @@ import { NextResponse } from 'next/server'
 import jwksClient from 'jwks-rsa'
 import jwt from 'jsonwebtoken'
 import type { JwtPayload } from 'jsonwebtoken'
-import { Permissions, postRegisterUser, updateApiClient } from 'geo-survey-map-shared-modules'
+import { postRegisterUser, updateApiClient } from 'geo-survey-map-shared-modules'
+import { DEFAULT_URL_FALLBACK } from '@/constants/constants'
 
 const client = jwksClient({
 	jwksUri: `${process.env.KINDE_ISSUER_URL}/.well-known/jwks.json`
 })
 
 export async function POST(req: Request) {
-	updateApiClient.setBaseURL('http://localhost:8080')
+	updateApiClient.setBaseURL(process.env.NEXT_PUBLIC_API_URL || DEFAULT_URL_FALLBACK)
 
 	try {
 		const token = await req.text()

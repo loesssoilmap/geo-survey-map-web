@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { TabsContent } from '@/components/ui/tabs'
 import { useTranslations } from '@/hooks/useTranslations'
 import { PointItem } from './point-item'
-import { Category, useGetAllSurveys, useUpdateSurveyStatus, useDownloadSurveysReport } from 'geo-survey-map-shared-modules'
+import { Category, useGetAllSurveys, useUpdateSurveyStatus, useDownloadSurveysReport, Survey } from 'geo-survey-map-shared-modules'
 import { NoDataFallback } from '@/components/no-data-fallback'
 import { toast } from 'react-toastify'
 import { DatePickerWithRange } from '@/components/date-picker-with-range'
@@ -15,6 +15,8 @@ import { addDays } from 'date-fns'
 import { DateRange } from 'react-day-picker'
 import { Button } from '@/components/ui/button'
 import { DEFAULT_LOCATION, DEFAULT_REPORT_CREATED_AT, WHOLE_GLOBE_RADIUS } from '@/constants/constants'
+import { PointDetailsModal } from './point-details-modal'
+import { useAppContext } from '@/context/AppContext'
 
 export const PointsTab = () => {
 	const { translations } = useTranslations()
@@ -24,6 +26,9 @@ export const PointsTab = () => {
 	const [dateRange, setDateRange] = useState<DateRange>({ from: addDays(new Date(), -30), to: new Date() })
 	const [selectedCategory, setSelectedCategory] = useState<Category | 'ALL'>('ALL')
 	const { mutate: downloadReport } = useDownloadSurveysReport()
+	const [isOpen, setIsOpen] = useState(false)
+	const [selectedPoint, setSelectedPoint] = useState<Survey | null>(null)
+	const { appState } = useAppContext()
 
 	const filteredSurveys = useMemo(() => {
 		if (!surveys) return []
@@ -33,10 +38,11 @@ export const PointsTab = () => {
 				const matchesCategory = selectedCategory === 'ALL' || survey.category === selectedCategory
 				const surveyDate = new Date(survey.createdAt)
 				const matchesDateRange = (!dateRange.from || surveyDate >= dateRange.from) && (!dateRange.to || surveyDate <= dateRange.to)
-				return matchesSearch && matchesCategory && matchesDateRange
+				const isInJurisdiction = appState.userPermissions.includes(survey.location.countryCode)
+				return matchesSearch && matchesCategory && matchesDateRange && isInJurisdiction
 			})
 			.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-	}, [surveys, searchTerm, selectedCategory, dateRange])
+	}, [surveys, searchTerm, selectedCategory, dateRange, appState.userPermissions])
 
 	const pendingSurveys = useMemo(() => filteredSurveys.filter((survey) => survey.status === 'PENDING'), [filteredSurveys])
 	const verifiedSurveys = useMemo(
@@ -51,10 +57,10 @@ export const PointsTab = () => {
 					status: action,
 					surveyId: surveyId
 				})
-				toast.success('Survey status has been updated')
+				toast.success(translations.surveyStatusUpdated)
 				refetch()
 			} catch (error) {
-				toast.error('Oops, something went wrong! Please try again later.')
+				toast.error(translations.oopsSomethingWentWrong)
 			}
 		}
 	}
@@ -84,7 +90,7 @@ export const PointsTab = () => {
 					link.remove()
 				},
 				onError: () => {
-					toast.error('Failed to download the report.')
+					toast.error(translations.downloadReportFailed)
 				}
 			}
 		)
@@ -105,10 +111,15 @@ export const PointsTab = () => {
 											survey={survey}
 											onAccept={() => updatePointStatus('ACCEPTED', survey.id)}
 											onReject={() => updatePointStatus('REJECTED', survey.id)}
+											setIsOpen={() => {
+												setIsOpen(true)
+												setSelectedPoint(survey)
+											}}
+											showActionButtons={true}
 										/>
 									))
 								) : (
-									<NoDataFallback text={'No points to approve'} />
+									<NoDataFallback text={translations.noPointsToApprove} />
 								)}
 							</div>
 						</div>
@@ -119,19 +130,19 @@ export const PointsTab = () => {
 									<Input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
 								</div>
 								<div className="space-y-2">
-									<label className="text-sm text-gray-600">Date Range</label>
+									<label className="text-sm text-gray-600">{translations.dateRange}</label>
 									<DatePickerWithRange date={dateRange} setDate={setDateRange} />
 								</div>
 								<div className="space-y-2">
-									<label className="text-sm text-gray-600">Category</label>
+									<label className="text-sm text-gray-600">{translations.pointDetails.category}</label>
 									<Select value={selectedCategory} onValueChange={(value) => setSelectedCategory(value as Category | 'ALL')}>
 										<SelectTrigger>
-											<SelectValue placeholder="Select category" />
+											<SelectValue placeholder={translations.selectCategoryPlaceholder} />
 										</SelectTrigger>
 										<SelectContent>
 											{Object.values(Category).map((category) => (
 												<SelectItem key={category} value={category}>
-													{category.replace(/_/g, ' ')}
+													{translations.category[category]}
 												</SelectItem>
 											))}
 										</SelectContent>
@@ -140,7 +151,7 @@ export const PointsTab = () => {
 							</div>
 							<div className="flex justify-between items-center">
 								<h3 className="text-lg font-semibold">{translations.pointManagement.approvedPoints}</h3>
-								<Button onClick={handleDownloadReport}>Get data report</Button>
+								<Button onClick={handleDownloadReport}>{translations.getDataReport}</Button>
 							</div>
 							<div className="space-y-2 max-h-[300px] overflow-y-auto">
 								{verifiedSurveys.length > 0 ? (
@@ -150,16 +161,31 @@ export const PointsTab = () => {
 											survey={survey}
 											onAccept={() => updatePointStatus('ACCEPTED', survey.id)}
 											onReject={() => updatePointStatus('REJECTED', survey.id)}
+											setIsOpen={() => {
+												setIsOpen(true)
+												setSelectedPoint(survey)
+											}}
+											showActionButtons={true}
 										/>
 									))
 								) : (
-									<NoDataFallback text={'No points found'} />
+									<NoDataFallback text={translations.noPointsFound} />
 								)}
 							</div>
 						</div>
 					</div>
 				</CardContent>
 			</Card>
+			{selectedPoint ? (
+				<PointDetailsModal
+					isOpen={isOpen}
+					onClose={() => {
+						setIsOpen(false)
+						setSelectedPoint(null)
+					}}
+					point={selectedPoint}
+				/>
+			) : null}
 		</TabsContent>
 	)
 }

@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react'
-import { Category, useCreateSurvey, useFileUpload } from 'geo-survey-map-shared-modules'
+import { Category, categoryInformationPhoto, problemCausesForCategories, useCreateSurvey, useFileUpload } from 'geo-survey-map-shared-modules'
 import { useAppContext } from '@/context/AppContext'
 import { FILTERS, MAX_INPUT_LENGTH } from '@/constants/constants'
 import { Camera, CircleHelp } from 'lucide-react'
@@ -88,7 +88,7 @@ const Categories = () => {
 		setCategoryInfoModalData({
 			category,
 			categoryInfo: translations.categoryInformation[category],
-			categoryImageUrl: '/las.jpg'
+			categoryImageUrl: categoryInformationPhoto[category].uri || '/forest.jpg'
 		})
 	}
 
@@ -178,7 +178,7 @@ const AreaPhoto: React.FC<AreaPhoto> = ({ fileName, setFileName }) => {
 					setFileName(photoAsset.name)
 					handleFilePath(filePath)
 				} catch (error: any) {
-					if (error.response.status === 413) {
+					if (error.response?.status === 413) {
 						toast('File size is too large', { type: 'error' })
 					} else {
 						toast('Error uploading file', { type: 'error' })
@@ -251,33 +251,36 @@ const AreaSolution: React.FC<AreaSolutionProps> = ({ selectSolution, setSelectSo
 
 	const handleSelectChange = (value: string) => {
 		setSelectSolution(value)
-		if (value !== 'OTHER') {
+		if (value !== 'Other') {
 			handlePickSolution(value)
 		} else {
 			handlePickSolution('')
 		}
 	}
-
 	const handleTextareaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
 		handlePickSolution(e.target.value)
 	}
+	const isDisabled = formState.category ? false : true
 
 	return (
 		<div>
-			<Label htmlFor="solution-select" className="text-sm font-bold opacity-50">
+			<Label htmlFor="solution-select" className={'text-sm font-bold opacity-50'}>
 				{translations.addPointForm.solution.title}
 			</Label>
-			<Select onValueChange={handleSelectChange} value={selectSolution}>
+			<Select onValueChange={handleSelectChange} value={selectSolution} disabled={isDisabled}>
 				<SelectTrigger id="solution-select" className="w-full">
 					<SelectValue placeholder="" />
 				</SelectTrigger>
 				<SelectContent className="z-800">
-					<SelectItem value="NATURE">Caused by nature</SelectItem>
-					<SelectItem value="HUMAN">Caused by human</SelectItem>
-					<SelectItem value="OTHER">Other</SelectItem>
+					{!isDisabled &&
+						problemCausesForCategories[formState.category].map((item) => (
+							<SelectItem key={item.value} value={item.value}>
+								{translations.problemCause[item.translationKey]}
+							</SelectItem>
+						))}
 				</SelectContent>
 			</Select>
-			{selectSolution === 'OTHER' && (
+			{selectSolution === 'Other' && (
 				<Textarea
 					value={formState.solution}
 					onChange={handleTextareaChange}

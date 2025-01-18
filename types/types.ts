@@ -1,4 +1,4 @@
-import { Category, CountryCode, Location, Permissions, Survey } from 'geo-survey-map-shared-modules'
+import { Category, CountryCode, Location, Permissions, Survey, UserStatus } from 'geo-survey-map-shared-modules'
 
 export type RolesClaim = {
 	name: string
@@ -29,6 +29,8 @@ export type CategoryInfoModalData = Omit<CategoryInfoModal, 'isShown'>
 
 export interface AppState {
 	userLocation: Location
+	userStatus: UserStatus
+	userPermissions: string[]
 	isLeftSideBarShown: boolean
 	isRightSideBarShown: boolean
 	mapFilters: Category[]
@@ -45,6 +47,7 @@ export interface Context {
 	handleRightSidebarToggle: () => void
 	updateFilters: (pickedFilter: Category) => void
 	handleSetUserLocation: (location: Location) => void
+	handleSetUserStatus: (status: UserStatus) => void
 	toggleHideFilters: () => void
 	handleMarkerInfoModalShow: () => void
 	handleMarkerInfoModalHide: () => void
@@ -54,6 +57,7 @@ export interface Context {
 	handleCategoryInfoModalShow: () => void
 	handleCategoryInfoModalHide: () => void
 	setCategoryInfoModalData: ({ category, categoryInfo, categoryImageUrl }: CategoryInfoModalData) => void
+	setPermissions: (permissions: string[]) => void
 }
 
 export interface UserItemProps {
@@ -69,16 +73,27 @@ export interface PointItemProps {
 	survey: Survey
 	onAccept?: () => void
 	onReject?: () => void
+	setIsOpen: () => void
+	showActionButtons?: boolean
 }
 
 export interface DeleteAccountModalProps {
 	isOpen: boolean
 	onClose: () => void
 	onConfirm: () => void
-	translations: {
+}
+
+export interface PointDetailsModalProps {
+	isOpen: boolean
+	onClose: () => void
+	point: Survey
+}
+
+export interface CategoryToAssets {
+	[key: string]: {
 		title: string
-		description: string
-		cancel: string
-		confirm: string
+		gradient: string
+		icon: React.JSX.Element
+		iconUrl: string
 	}
 }

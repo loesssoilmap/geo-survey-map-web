@@ -1,13 +1,5 @@
+import { CategoryToAssets } from '@/types/types'
 import React from 'react'
-
-interface CategoryToAssets {
-	[key: string]: {
-		title: string
-		gradient: string
-		icon: React.JSX.Element
-		iconUrl: string
-	}
-}
 
 export const Cactus = () => (
 	<svg className="min-w-[30px]" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">

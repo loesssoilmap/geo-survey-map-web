@@ -1,6 +1,8 @@
 import { categoryToAssets } from '@/components/icons'
 import { Category, CountryCode } from 'geo-survey-map-shared-modules'
 
+export const LANGUAGES = ['en', 'de', 'el', 'ca', 'es', 'fr', 'ga', 'hu', 'it', 'lt', 'nl', 'pl', 'sk', 'sr', 'sv', 'tr']
+
 export const FILTERS = [
 	{
 		title: 'Gleba sucha',
@@ -57,3 +59,5 @@ export const DEFAULT_COUNTRYCODE = 'DE'
 export const MAX_INPUT_LENGTH = 255
 export const DEFAULT_REPORT_CREATED_AT = '2025-01-01T12:00:00Z'
 export const WHOLE_GLOBE_RADIUS = 20037509
+export const DEFAULT_URL_FALLBACK = 'http://localhost:8080/'
+export const DEFAULT_STATUS = 'ACTIVE'

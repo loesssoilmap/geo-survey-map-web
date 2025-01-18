@@ -10,11 +10,13 @@ import { useMarkerFormContext } from '@/context/AddMarkerFormContext'
 import { toast } from 'react-toastify'
 import { getCountryCode, isDefaultLocation } from '@/lib/utils'
 import { DEFAULT_COUNTRYCODE, DEFAULT_LOCATION } from '@/constants/constants'
+import { useTranslations } from '@/hooks/useTranslations'
 
 export const MapContent = () => {
 	const map = useMap()
 	const { appState, handleSetUserLocation } = useAppContext()
 	const { handlePickLocation } = useMarkerFormContext()
+	const { translations } = useTranslations()
 
 	useEffect(() => {
 		const handleLocationFound = async (e: any) => {
@@ -36,7 +38,7 @@ export const MapContent = () => {
 		}
 
 		const handleLocationError = () => {
-			toast('Failed to locate your position, please try refreshing the page.', { type: 'error' })
+			toast(translations.locationError, { type: 'error' })
 		}
 
 		map.locate({ enableHighAccuracy: true, watch: false }).on('locationfound', handleLocationFound).on('locationerror', handleLocationError)

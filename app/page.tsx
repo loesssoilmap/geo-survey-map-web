@@ -1,3 +1,5 @@
+'use client'
+
 import { Nav } from './_components/Nav'
 import Hero from './_components/Hero'
 import VideoSection from './_components/VideoSection'

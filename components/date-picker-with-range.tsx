@@ -4,11 +4,11 @@ import * as React from 'react'
 import { CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { DateRange } from 'react-day-picker'
-
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useTranslations } from '@/hooks/useTranslations'
 
 interface DatePickerWithRangeProps {
 	className?: string
@@ -17,6 +17,8 @@ interface DatePickerWithRangeProps {
 }
 
 export function DatePickerWithRange({ className, date, setDate }: DatePickerWithRangeProps) {
+	const { translations } = useTranslations()
+
 	return (
 		<div className={cn('grid gap-2', className)}>
 			<Popover>
@@ -35,7 +37,7 @@ export function DatePickerWithRange({ className, date, setDate }: DatePickerWith
 								format(date.from, 'dd.MM.yyyy')
 							)
 						) : (
-							<span>Pick a date</span>
+							<span>{translations.pickDate}</span>
 						)}
 					</Button>
 				</PopoverTrigger>

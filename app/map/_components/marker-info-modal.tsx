@@ -37,7 +37,7 @@ export const MarkerInfoModal = () => {
 
 	return (
 		<div className={`absolute bottom-0 z-800 p-4 transition-all left-1/2 -translate-x-1/2 ${toggleInfoModalStyles} `} ref={modalRef}>
-			<Box className="flex flex-col max-h-80 sm:h-full w-72 sm:w-96 overflow-y-auto overflow-x-hidden">
+			<Box className="flex flex-col max-h-80 sm:h-full w-72 sm:w-96">
 				<div
 					className={`flex justify-between ${
 						categoryToAssets[appState.markerInfoModal.survey?.category as string]?.gradient
@@ -45,13 +45,14 @@ export const MarkerInfoModal = () => {
 					<div>
 						<h3 className="font-bold">
 							{translations.category[appState.markerInfoModal.survey?.category as Category]}
-							{!isBasicUser ? `(${appState.markerInfoModal.survey?.id})` : null}
+							{!isBasicUser ? ` (${appState.markerInfoModal.survey?.id})` : null}
 						</h3>
 						<small>{formatedDate}</small>
+						<p className="text-xs">{!isBasicUser ? appState.markerInfoModal.survey?.user.email : null}</p>
 					</div>
 				</div>
-				<div className="w-full flex p-4 gap-2">
-					<div className="w-1/2">
+				<div className="w-full p-4 overflow-y-auto overflow-x-hidden">
+					<div className="w-full mb-4">
 						<div>
 							<small className="text-xs font-bold opacity-50">{translations.pointDetails.placeName}</small>
 							<p className="text-sm font-medium break-words">{appState.markerInfoModal.survey?.location.name}</p>
@@ -75,7 +76,7 @@ export const MarkerInfoModal = () => {
 							alt="problem"
 							width={200}
 							height={200}
-							className="w-1/2 object-cover rounded-lg"
+							className="w-full object-cover rounded-lg"
 						/>
 					) : null}
 				</div>

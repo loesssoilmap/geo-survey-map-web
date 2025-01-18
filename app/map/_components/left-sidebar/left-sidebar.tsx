@@ -16,6 +16,7 @@ export const LeftSidebar = () => {
 	const { appState, handleLeftSidebarToggle, handleRightSidebarToggle, toggleHideFilters, handleCenterOnUser } = useAppContext()
 	const { isLeftSideBarShown } = appState
 	const hideSidebarStyles = isLeftSideBarShown ? '' : '-translate-x-[13rem] sm:-translate-x-[19rem]'
+	const isBanned = appState.userStatus === 'BANNED'
 
 	useEffect(() => {
 		const mapZoomControl = document.querySelector('.leaflet-control-zoom')
@@ -33,7 +34,7 @@ export const LeftSidebar = () => {
 		handleRightSidebarToggle()
 		toggleHideFilters()
 		handleCenterOnUser(true)
-		toast('Drag the temporary marker to the desired location', { type: 'info' })
+		toast(translations.dragMarkerMessage, { type: 'info' })
 	}
 
 	return (
@@ -46,13 +47,14 @@ export const LeftSidebar = () => {
 				<LeftSidebarFilters />
 				<button
 					className={`mt-auto bg-primary hover:bg-primary/90 rounded-lg text-white mx-8 py-2 font-bold ${
-						!isAuthenticated ? 'opacity-50' : ''
+						!isAuthenticated || isBanned ? 'opacity-50' : ''
 					}`}
 					onClick={handleAdd}
-					disabled={!isAuthenticated}>
+					disabled={!isAuthenticated || isBanned}>
 					{translations.addPoint}
 				</button>
-				{!isAuthenticated ? <small className="mx-8 text-center o">{translations.notAuthenticatedModal.message}</small> : ''}
+				{!isAuthenticated ? <small className="mx-8 text-center">{translations.notAuthenticatedModal.message}</small> : ''}
+				{isBanned ? <small className="mx-8 text-center text-red-600 font-bold">{translations.notAuthenticatedModal.message}</small> : ''}
 			</Box>
 			<ToggleLeftSidebarButton />
 		</div>

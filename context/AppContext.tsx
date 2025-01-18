@@ -1,12 +1,14 @@
 'use client'
 
 import { createContext, useState, useContext, useEffect } from 'react'
-import { Category, CountryCode, Location, Survey, useGetAllSurveys } from 'geo-survey-map-shared-modules'
-import { DEFAULT_LANGUAGE, DEFAULT_LOCATION } from '@/constants/constants'
+import { Category, CountryCode, Location, Survey, useGetAllSurveys, useGetSelfUserData, UserStatus } from 'geo-survey-map-shared-modules'
+import { DEFAULT_LANGUAGE, DEFAULT_LOCATION, DEFAULT_STATUS } from '@/constants/constants'
 import { AppState, CategoryInfoModalData, ChidlrenProps, Context } from '@/types/types'
 
 const initialStateValue: AppState = {
 	userLocation: DEFAULT_LOCATION,
+	userStatus: DEFAULT_STATUS,
+	userPermissions: [],
 	isLeftSideBarShown: true,
 	isRightSideBarShown: false,
 	markers: [],
@@ -28,7 +30,7 @@ const initialStateValue: AppState = {
 		isShown: false,
 		category: null,
 		categoryInfo: '',
-		categoryImageUrl: '/las.jpg'
+		categoryImageUrl: '/forest.jpg'
 	},
 	language: DEFAULT_LANGUAGE,
 	shouldCenterOnUser: true
@@ -37,7 +39,8 @@ const initialStateValue: AppState = {
 export const AppContext = createContext<Context | null>(null)
 
 export const AppContextProvider: React.FC<ChidlrenProps> = ({ children }) => {
-	const { data } = useGetAllSurveys()
+	const { data: markers } = useGetAllSurveys()
+	const { data: user } = useGetSelfUserData()
 	const [appState, setAppState] = useState(initialStateValue)
 
 	const handleLeftSidebarToggle = () => {
@@ -66,6 +69,10 @@ export const AppContextProvider: React.FC<ChidlrenProps> = ({ children }) => {
 
 	const handleSetUserLocation = (location: Location) => {
 		setAppState((prev) => ({ ...prev, userLocation: location }))
+	}
+
+	const handleSetUserStatus = (status: UserStatus) => {
+		setAppState((prev) => ({ ...prev, userStatus: status }))
 	}
 
 	const handleMarkerInfoModalShow = () => {
@@ -100,11 +107,27 @@ export const AppContextProvider: React.FC<ChidlrenProps> = ({ children }) => {
 		setAppState((prev) => ({ ...prev, categoryInfoModal: { ...prev.categoryInfoModal, category, categoryInfo, categoryImageUrl } }))
 	}
 
+	const setPermissions = (permissions: string[]) => {
+		setAppState((prev) => ({ ...prev, userPermissions: permissions }))
+	}
+
 	useEffect(() => {
-		if (data) {
-			setAppState((prev) => ({ ...prev, markers: data.filter((survey) => survey.status === 'ACCEPTED') }))
+		if (markers) {
+			setAppState((prev) => ({ ...prev, markers: markers.filter((survey) => survey.status === 'ACCEPTED') }))
 		}
-	}, [data])
+	}, [markers])
+
+	useEffect(() => {
+		if (user?.status) {
+			setAppState((prev) => ({ ...prev, userStatus: user.status }))
+		}
+	}, [user?.status])
+
+	useEffect(() => {
+		if (user?.permissions) {
+			setPermissions(user.permissions)
+		}
+	}, [user?.permissions])
 
 	useEffect(() => {
 		setLanguage(getLanguageFromLocalStorage())
@@ -139,6 +162,7 @@ export const AppContextProvider: React.FC<ChidlrenProps> = ({ children }) => {
 				handleRightSidebarToggle,
 				updateFilters,
 				handleSetUserLocation,
+				handleSetUserStatus,
 				toggleHideFilters,
 				handleMarkerInfoModalShow,
 				handleMarkerInfoModalHide,
@@ -147,7 +171,8 @@ export const AppContextProvider: React.FC<ChidlrenProps> = ({ children }) => {
 				handleCenterOnUser,
 				handleCategoryInfoModalShow,
 				handleCategoryInfoModalHide,
-				setCategoryInfoModalData
+				setCategoryInfoModalData,
+				setPermissions
 			}}>
 			{children}
 		</AppContext.Provider>

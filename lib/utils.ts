@@ -1,6 +1,7 @@
 import { DEFAULT_LOCATION } from '@/constants/constants'
 import { RolesClaim } from '@/types/types'
 import { clsx, type ClassValue } from 'clsx'
+import { CountryCode } from 'geo-survey-map-shared-modules'
 import { twMerge } from 'tailwind-merge'
 const minValue = Math.log(1)
 const maxValue = Math.log(1000)
@@ -45,7 +46,7 @@ export const getCountryCode = async (
 	lat: number,
 	lng: number
 ): Promise<{
-	countryCode: string
+	countryCode: CountryCode
 	placeName: string
 }> => {
 	try {

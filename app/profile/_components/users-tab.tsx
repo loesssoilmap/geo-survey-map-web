@@ -5,7 +5,14 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { TabsContent } from '@/components/ui/tabs'
 import { useTranslations } from '@/hooks/useTranslations'
-import { Permissions, useBanOrReactivateUser, useGetAllUsers, UserStatus, useSetUserPermissions } from 'geo-survey-map-shared-modules'
+import {
+	Permissions,
+	useBanOrReactivateUser,
+	useGetAllUsers,
+	useGetSelfUserData,
+	UserStatus,
+	useSetUserPermissions
+} from 'geo-survey-map-shared-modules'
 import { NoDataFallback } from '@/components/no-data-fallback'
 import { UserItem } from './user-item'
 import { toast } from 'react-toastify'
@@ -15,18 +22,21 @@ export const UsersTab = () => {
 	const { translations } = useTranslations()
 	const { data: users, isLoading, refetch } = useGetAllUsers()
 	const { mutateAsync: banOrReactivate } = useBanOrReactivateUser()
-	const { mutateAsync: setPermissions } = useSetUserPermissions()
+	const { mutateAsync: setPermissionsDB } = useSetUserPermissions()
 	const [searchTerm, setSearchTerm] = useState('')
+	const { refetch: refetchSelfPermissions } = useGetSelfUserData()
 
 	const handlePermissionsChange = async (userId: string, newPermissions: Permissions[]) => {
 		try {
-			await setPermissions({
+			await setPermissionsDB({
 				kindeId: userId,
 				permissions: newPermissions
 			})
-			toast.success("User's permissions have been updated.")
+			refetchSelfPermissions()
+			refetch()
+			toast.success(translations.userPermissionsUpdated)
 		} catch (error) {
-			toast.error('Oops, something went wrong! Please try again later.')
+			toast.error(translations.oopsSomethingWentWrong)
 		}
 	}
 	const handleBanUser = async (userId: string, status: UserStatus) => {
@@ -35,10 +45,10 @@ export const UsersTab = () => {
 				kindeId: userId,
 				status
 			})
-			toast.success("User's status has been updated.")
+			toast.success(translations.userStatusUpdated)
 			refetch()
 		} catch (error) {
-			toast.error('Oops, something went wrong! Please try again later.')
+			toast.error(translations.oopsSomethingWentWrong)
 		}
 	}
 
@@ -55,7 +65,9 @@ export const UsersTab = () => {
 						</div>
 						<div className="space-y-2 max-h-80 overflow-y-auto">
 							<div>
-								<p className="text-gray text-end w-full text-sm">Users count: {filteredUsers?.length || 0}</p>
+								<p className="text-gray text-end w-full text-sm">
+									{translations.usersCount} {filteredUsers?.length || 0}
+								</p>
 							</div>
 							{isLoading ? (
 								<Loader />

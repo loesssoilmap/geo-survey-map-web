@@ -11,15 +11,21 @@ import { cn } from '@/lib/utils'
 import { UserItemProps } from '@/types/types'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { useTranslations } from '@/hooks/useTranslations'
 
 export const UserItem: React.FC<UserItemProps> = ({ email, permissions, isBanned, onPermissionsChange, onBanUser }) => {
+	const { translations } = useTranslations()
 	const [isOpen, setIsOpen] = useState(false)
 	const [selectedPermissions, setSelectedPermissions] = useState<string[]>(permissions)
 	const { user } = useKindeBrowserClient()
 
 	const handlePermissionChange = (permission: string, checked: boolean) => {
 		setSelectedPermissions((prev) => (checked ? [...prev, permission] : prev.filter((p) => p !== permission)))
+	}
+
+	const handleSavePermissions = () => {
 		onPermissionsChange(selectedPermissions as Permissions[])
+		setIsOpen(false)
 	}
 
 	return (
@@ -37,7 +43,7 @@ export const UserItem: React.FC<UserItemProps> = ({ email, permissions, isBanned
 					</DialogTrigger>
 					<DialogContent aria-describedby="Permissions management" className="sm:max-w-96">
 						<DialogHeader>
-							<DialogTitle>Zarządzaj uprawnieniami</DialogTitle>
+							<DialogTitle>{translations.managePermissions}</DialogTitle>
 						</DialogHeader>
 						<ScrollArea className="h-[300px] w-full rounded-md border p-4">
 							{Object.values(Permissions).map((permission) => (
@@ -55,6 +61,12 @@ export const UserItem: React.FC<UserItemProps> = ({ email, permissions, isBanned
 								</div>
 							))}
 						</ScrollArea>
+						<div className="mt-4 flex justify-end space-x-2">
+							<Button variant="secondary" onClick={() => setIsOpen(false)}>
+								{translations.cancel}
+							</Button>
+							<Button onClick={handleSavePermissions}>{translations.save}</Button>
+						</div>
 					</DialogContent>
 				</Dialog>
 				{user?.email !== email ? (
@@ -66,7 +78,7 @@ export const UserItem: React.FC<UserItemProps> = ({ email, permissions, isBanned
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent className="z-800">
-								<p>Ban user. This will prevent them from adding points to the map</p>
+								<p>{translations.banUserTooltip}</p>
 							</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>

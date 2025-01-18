@@ -12,11 +12,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 export const LeftSidebarFilters = () => {
 	const { translations } = useTranslations()
 	const { appState, updateFilters } = useAppContext()
-
 	const getActiveStyling = (category: Category) => (appState.mapFilters.includes(category) ? 'border-primary bg-primary/10' : '')
-
 	const mainFilters = FILTERS.filter((item) => !['LOSS_OF_ORGANIC_MATTER', 'PH', 'BIODIVERSITY'].includes(item.category))
-
 	const otherFilters = FILTERS.filter((item) => ['LOSS_OF_ORGANIC_MATTER', 'PH', 'BIODIVERSITY'].includes(item.category))
 
 	return (
@@ -35,8 +32,8 @@ export const LeftSidebarFilters = () => {
 									{item.icon} {translations.category[item.category]}
 								</li>
 							</TooltipTrigger>
-							<TooltipContent className="z-800">
-								<p>{translations.categoryInformation[item.category]}</p>
+							<TooltipContent className="z-800 max-w-60">
+								<p dangerouslySetInnerHTML={{ __html: translations.categoryInformationTooltip[item.category] }} />
 							</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>
@@ -61,8 +58,8 @@ export const LeftSidebarFilters = () => {
 													{item.icon} {translations.category[item.category]}
 												</li>
 											</TooltipTrigger>
-											<TooltipContent className="z-800">
-												<p>{translations.categoryInformation[item.category]}</p>
+											<TooltipContent className="z-800 max-w-60">
+												<p dangerouslySetInnerHTML={{ __html: translations.categoryInformationTooltip[item.category] }} />
 											</TooltipContent>
 										</Tooltip>
 									</TooltipProvider>
