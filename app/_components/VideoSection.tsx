@@ -11,11 +11,11 @@ export default function VideoSection() {
 				<div className="aspect-video max-w-3xl w-full">
 					<iframe
 						className="rounded-lg w-full h-full"
-						src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+						src="https://www.youtube.com/embed/JGrNVqyldQg?si=kSTeOSB0DaTSktk6"
 						title={translations.appTutorial}
+						frameBorder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
-						allowFullScreen
-					/>
+						allowFullScreen></iframe>
 				</div>
 			</div>
 		</section>
