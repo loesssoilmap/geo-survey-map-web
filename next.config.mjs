@@ -10,6 +10,11 @@ const nextConfig = {
 				pathname: '/surveyimages/**'
 			},
 			{
+				protocol: 'http',
+				hostname: 'loess.wmi.amu.edu.pl',
+				pathname: '/**'
+			},
+			{
 				protocol: 'https',
 				hostname: 'www.iberdrola.com',
 				pathname: '/**'
