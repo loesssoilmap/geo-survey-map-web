@@ -20,7 +20,7 @@ export default function Footer() {
 									{translations.settings.privacyPolicy}
 								</Link>
 								<Link
-									href="/https://github.com/orgs/GeoSurveyMap/repositories"
+									href="https://github.com/orgs/GeoSurveyMap/repositories"
 									className="hover:text-primary transition-colors text-center sm:text-left">
 									{translations.codeRepository}
 								</Link>
