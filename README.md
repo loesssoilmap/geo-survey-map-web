@@ -4,10 +4,14 @@ Welcome to the **LOESS Soil Map** project! This web application is designed for 
 
 ## Features
 
-- **Interactive Map**: Add and view points with details about soil issues.
-- **User Profiles**: Manage your contributions and account details.
-- **Admin Panel**: Oversee and moderate user activities and map points.
-- **Responsive Design**: Accessible on both web and mobile devices.
+| Feature | Preview |
+|---------|---------|
+| **Support for 14 Languages**<br>Experience the application in multiple languages. | ![Multi-language Support](https://i.imgur.com/zlRqfsT.gif) |
+| **Interactive Map with Clustering**<br>Markers are grouped for better visibility at different zoom levels. | ![Clustered Map](https://i.imgur.com/5O7naBB.png) |
+| **Add Point Form**<br>Simple and intuitive form to add soil issue reports. | ![Add Point Form](https://i.imgur.com/vbhJKm6.png) |
+| **Point Details View**<br>Click on any map marker to see detailed information. | ![Point Details](https://i.imgur.com/pEwUrA2.png) |
+| **User Profile**<br>Manage your contributions and personal settings. | ![User Profile](https://i.imgur.com/VPpbopR.png) |
+| **Admin Panel**<br>Oversee user activity and manage map points. | ![Admin Panel 1](https://i.imgur.com/FRjsl2l.png)<br>![Admin Panel 2](https://i.imgur.com/GHPEv3U.png) |
 
 ---
 
