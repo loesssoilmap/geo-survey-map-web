@@ -5,8 +5,8 @@ import React, { useEffect } from 'react'
 import { LeftSidebarFilters } from './left-sidebar-filters'
 import { Logo } from '@/components/logo'
 import { useAppContext } from '@/context/AppContext'
-import { ChevronLeft } from 'lucide-react'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { ChevronLeft, LogIn } from 'lucide-react'
+import { LoginLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { useTranslations } from '@/hooks/useTranslations'
 import { toast } from 'react-toastify'
 
@@ -45,14 +45,24 @@ export const LeftSidebar = () => {
 				</div>
 				<p>{translations.filtersDescription}</p>
 				<LeftSidebarFilters />
-				<button
-					className={`mt-auto bg-primary hover:bg-primary/90 rounded-lg text-white mx-8 py-2 font-bold ${
-						!isAuthenticated || isBanned ? 'opacity-50' : ''
-					}`}
-					onClick={handleAdd}
-					disabled={!isAuthenticated || isBanned}>
-					{translations.addPoint}
-				</button>
+				{!isAuthenticated ? (
+					<LoginLink
+						className="mt-auto bg-primary hover:bg-primary/90 rounded-lg text-white mx-8 py-2 font-bold text-center"
+						authUrlParams={{
+							lang: appState.language
+						}}>
+						{translations.login}
+					</LoginLink>
+				) : (
+					<button
+						className={`mt-auto bg-primary hover:bg-primary/90 rounded-lg text-white mx-8 py-2 font-bold ${
+							!isAuthenticated || isBanned ? 'opacity-50' : ''
+						}`}
+						onClick={handleAdd}
+						disabled={!isAuthenticated || isBanned}>
+						{translations.addPoint}
+					</button>
+				)}
 				{!isAuthenticated ? <small className="mx-8 text-center">{translations.notAuthenticatedModal.message}</small> : ''}
 				{isBanned ? <small className="mx-8 text-center text-red-600 font-bold">{translations.notAuthenticatedModal.message}</small> : ''}
 			</Box>
