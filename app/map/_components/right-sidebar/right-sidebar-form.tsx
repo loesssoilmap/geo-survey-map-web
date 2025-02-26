@@ -39,7 +39,7 @@ export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose,
 			},
 			solution: formState.solution,
 			affectedArea: formState.affectedArea,
-			filePath: formState.filePath
+			filePath: formState.filePath ?? ''
 		})
 		if (response.status === 200 && response.data.data) {
 			toast.success(translations.addPointForm.successMessage)
@@ -51,7 +51,7 @@ export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose,
 	}
 
 	const checkForFilledFields = () => {
-		const fields = [formState.category, formState.description, formState.location.name, formState.solution, formState.filePath]
+		const fields = [formState.category, formState.description, formState.location.name, formState.solution]
 		const emptyFields = fields.filter((field) => field === '')
 
 		return emptyFields.length > 0
