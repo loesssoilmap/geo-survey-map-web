@@ -1,7 +1,7 @@
 import { categoryToAssets } from '@/components/icons'
 import { Category, CountryCode } from 'geo-survey-map-shared-modules'
 
-export const LANGUAGES = ['en', 'de', 'el', 'ca', 'es', 'fr', 'ga', 'hu', 'it', 'lt', 'nl', 'pl', 'sk', 'sr', 'sv', 'tr']
+export const LANGUAGES = ['en', 'de', 'el', 'ca', 'es', 'ga', 'hu', 'it', 'lt', 'nl', 'pl', 'sk', 'sr', 'sv', 'tr']
 
 export const FILTERS = [
 	{
