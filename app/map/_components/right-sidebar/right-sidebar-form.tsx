@@ -42,7 +42,7 @@ export const RightSidebarForm: React.FC<RightSidebarFormProps> = ({ handleClose,
 			filePath: formState.filePath ?? ''
 		})
 		if (response.status === 200 && response.data.data) {
-			toast.success(translations.addPointForm.successMessage)
+			toast.success(translations.addPointForm.successMessage, { autoClose: false })
 		} else {
 			toast.error(translations.addPointForm.errorMessage)
 		}
