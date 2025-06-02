@@ -142,3 +142,7 @@ Contributions are welcome! If you find a bug or have a feature request, please o
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
+
+
+## Updates
+* 31.05.2025
