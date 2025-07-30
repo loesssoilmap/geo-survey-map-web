@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { useTranslations } from '@/hooks/useTranslations'
 import Link from 'next/link'
+import { FaAndroid, FaApple } from 'react-icons/fa'
 
 export default function Hero() {
 	const { translations } = useTranslations()
@@ -20,6 +21,29 @@ export default function Hero() {
 								{translations.learnMore}
 							</Button>
 						</Link>
+					</div>
+					{/* Download buttons for mobile apps */}
+					<div className="flex flex-col sm:flex-row gap-4">
+						<a
+							href="https://uam-my.sharepoint.com/:u:/g/personal/bikol_amu_edu_pl/Ed021jhPsXFPn1SNLdnEXVsBF9VXI1Y8MAZLCI-muoKgXw?e=ywomlI&download=1"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<Button className="flex items-center md:h-11 md:text-lg" variant="outline">
+								<FaAndroid className="w-5 h-5 mr-2" />
+								Android (APK)
+							</Button>
+						</a>
+						<a
+							href="https://apps.apple.com/pl/app/loess-soil-map/id6740585479"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<Button className="flex items-center md:h-11 md:text-lg" variant="outline">
+								<FaApple className="w-5 h-5 mr-2" />
+								App Store
+							</Button>
+						</a>
 					</div>
 				</div>
 			</div>
