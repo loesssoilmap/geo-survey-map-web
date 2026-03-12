@@ -280,15 +280,15 @@ const AreaSolution: React.FC<AreaSolutionProps> = ({ selectSolution, setSelectSo
 						))}
 				</SelectContent>
 			</Select>
-			{selectSolution === 'Other' && (
-				<Textarea
-					value={formState.solution}
-					onChange={handleTextareaChange}
-					placeholder="Describe the solution"
-					className="resize-none mt-4"
-					maxLength={MAX_INPUT_LENGTH}
-				/>
-			)}
+				{selectSolution === 'Other' && (
+					<Textarea
+						value={formState.solution}
+						onChange={handleTextareaChange}
+						placeholder={translations.addPointForm.solution.description}
+						className="resize-none mt-4"
+						maxLength={MAX_INPUT_LENGTH}
+					/>
+				)}
 		</div>
 	)
 }
