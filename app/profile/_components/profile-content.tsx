@@ -13,8 +13,10 @@ import { useGetRole } from '@/hooks/useGetRole'
 
 export const ProfileContent = () => {
 	const { translations } = useTranslations()
-	const { isBasicUser } = useGetRole()
-	const gridCols = isBasicUser ? 'grid-cols-1' : 'grid-cols-3'
+	const { isAdmin, isSuperAdmin } = useGetRole()
+	const canSeeUsersTab = isSuperAdmin
+	const canSeePointsTab = isAdmin || isSuperAdmin
+	const gridCols = canSeeUsersTab ? 'grid-cols-3' : canSeePointsTab ? 'grid-cols-2' : 'grid-cols-1'
 
 	return (
 		<div className="min-h-screen bg-gray-50">
@@ -35,24 +37,20 @@ export const ProfileContent = () => {
 						<TabsTrigger value="profile" className="text-wrap h-full">
 							{translations.userProfile.title}
 						</TabsTrigger>
-						{!isBasicUser ? (
-							<>
-								<TabsTrigger value="users" className="text-wrap h-full">
-									{translations.userManagement.title}
-								</TabsTrigger>
-								<TabsTrigger value="points" className="text-wrap h-full">
-									{translations.pointManagement.title}
-								</TabsTrigger>
-							</>
+						{canSeeUsersTab ? (
+							<TabsTrigger value="users" className="text-wrap h-full">
+								{translations.userManagement.title}
+							</TabsTrigger>
+						) : null}
+						{canSeePointsTab ? (
+							<TabsTrigger value="points" className="text-wrap h-full">
+								{translations.pointManagement.title}
+							</TabsTrigger>
 						) : null}
 					</TabsList>
 					<ProfileTab />
-					{!isBasicUser ? (
-						<>
-							<UsersTab />
-							<PointsTab />
-						</>
-					) : null}
+					{canSeeUsersTab ? <UsersTab /> : null}
+					{canSeePointsTab ? <PointsTab /> : null}
 				</Tabs>
 			</div>
 		</div>
